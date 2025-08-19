@@ -124,7 +124,7 @@
 
       <div class="ctrl wday" id="wday">День недели<br/>Число.Месяц.</div>
 
-      <div id="shiftBadge" class="badge">В смена 0 человек</div>
+      <div id="shiftBadge" class="badge">В смене 0 человек</div>
 
       <button class="ctrl" id="sendBtn">Отправить</button>
       <button class="ctrl" id="sendPlanBtn">Отправить схему</button>
@@ -676,7 +676,7 @@ function buildMessage(){
   const iso=curDay(), d=dayData(), lines=[];
   lines.push('Добрый день, друзья!');
   lines.push(`${fmtDate(iso)} (${weekday(iso)})`);
-  lines.push(`В смена ${countUniqueAssigned()} человек. 🕺`);
+  lines.push(`В смене ${countUniqueAssigned()} человек. 🕺`);
 
   if(d.banquets.length===0) lines.push('Банкеты: 0');
   else{
@@ -726,7 +726,7 @@ function importFromFile(file){ const r=new FileReader(); r.onload=()=>{ try{
 
 /* ===== Счётчики/статистика ===== */
 function countUniqueAssigned(){ const d=dayData(); const used=new Set(); Object.values(d.assign).forEach(zmap=>{ Object.values(zmap).forEach(arr=>{ arr.filter(x=>x.t==='w').forEach(x=>used.add(x.name)); }); }); return used.size; }
-function updateShiftBadge(){ $('#shiftBadge').textContent=`В смена ${countUniqueAssigned()} человек`; }
+function updateShiftBadge(){ $('#shiftBadge').textContent=`В смене ${countUniqueAssigned()} человек`; }
 
 function showLayout(){
   const d=dayData(); const host=modal();
@@ -829,3 +829,4 @@ document.addEventListener('DOMContentLoaded', ()=>{
 </script>
 </body>
 </html>
+
