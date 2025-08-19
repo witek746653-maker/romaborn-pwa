@@ -2,23 +2,40 @@
 <html lang="ru">
 <head>
 <meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover"/>
 <title>Распределение — мобильная</title>
+
+<!-- PWA -->
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#ffe9c4">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
 <style>
   :root{
     --ink:#2c2a29;--bg:#ffffff;--panel:#fffdfc;--line:#8b5e57;--muted:#7a6662;
     --accent:#f5e6da;--active:#ffe9c4;--badge:#ffd84d;
+    --chip:#ffffff;
+    --scale:0.92; /* компактней на мобилке */
   }
+  [data-theme="dark"]{
+    --bg:#121212;--panel:#1a1716;--ink:#ededed;--line:#6f554f;--muted:#b7a7a3;--accent:#2a231f;--active:#2b2623;--chip:#181616;--badge:#9b7a00;
+  }
+  [data-theme="daltonic"]{
+    --accent:#eaeaea;--active:#e2f0ff;--badge:#c9e265;--line:#5b6b7a;
+  }
+
   *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-  html,body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.25 system-ui,-apple-system,Segoe UI,Roboto}
+  html,body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.28 system-ui,-apple-system,Segoe UI,Roboto}
   button,input,select,textarea{font:inherit;color:inherit}
-  .wrap{max-width:980px;margin:0 auto;padding:8px}
+  .wrap{max-width:980px;margin:0 auto;padding:8px;transform:scale(var(--scale));transform-origin:top center}
+
   .box{border:2px solid var(--line);border-radius:6px;background:var(--panel)}
   .row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
   .pad{padding:8px}
   .topbar{display:grid;grid-template-columns:1fr;gap:8px;margin-bottom:8px}
   .controls{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
-  .ctrl{border:2px solid var(--line);background:#fff;border-radius:6px;padding:6px 10px;cursor:pointer}
+  .ctrl{border:2px solid var(--line);background:var(--chip);border-radius:6px;padding:6px 10px;cursor:pointer}
   .ctrl.primary{background:var(--accent)}
   .mini{font-size:12px;padding:4px 8px}
   .wday{min-width:160px}
@@ -26,43 +43,48 @@
   .badge{border:2px solid var(--line);background:var(--badge);color:#1f1a0f;border-radius:20px;padding:6px 12px;font-weight:700}
 
   .halls{display:flex;flex-wrap:wrap;gap:8px}
-  .hall-btn{border:2px solid var(--line);background:#fff;border-radius:6px;padding:10px 12px;cursor:pointer}
+  .hall-btn{position:relative;border:2px solid var(--line);background:var(--chip);border-radius:6px;padding:8px 10px;cursor:pointer}
   .hall-btn.active{background:var(--active)}
-  .pill{border:2px solid var(--line);background:#fff;border-radius:20px;padding:6px 10px;cursor:pointer}
+  .hall-count{position:absolute;right:-6px;top:-6px;background:var(--badge);border:2px solid var(--line);border-radius:12px;padding:2px 6px;font-size:11px;line-height:1;color:#1f1a0f}
+
+  .pill{border:2px solid var(--line);background:var(--chip);border-radius:20px;padding:6px 10px;cursor:pointer}
 
   .main{display:grid;grid-template-columns:1fr 1.2fr;gap:10px}
   @media (max-width:760px){ .main{grid-template-columns:1fr} }
   .left{display:grid;gap:10px}
 
-  .banquets{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-  .b-chip{border:2px solid var(--line);border-radius:16px;padding:6px 8px;display:inline-flex;align-items:center;gap:6px;color:#111;background:#fff}
-  .b-chip .x{border:none;background:none;font-weight:900;font-size:16px;line-height:1;cursor:pointer}
-  .b-ico{font-size:16px}
+  .banquets{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+  .b-chip{border:2px solid var(--line);border-radius:10px;padding:4px 6px;display:inline-flex;align-items:flex-start;gap:6px;color:var(--ink);background:var(--chip);min-width:0}
+  .b-chip .x{border:none;background:none;font-weight:900;font-size:16px;line-height:1;cursor:pointer;margin-left:2px}
+  .b-ico{font-size:16px;line-height:1;margin-top:1px}
+  .b-body{display:flex;flex-direction:column;gap:2px;min-width:0}
+  .b-title{font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:220px}
+  .b-note{font-size:11px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:220px}
 
   .waiters-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
-  .waiters{border:2px solid var(--line);border-radius:6px;padding:8px;background:#fff}
+  .waiters{border:2px solid var(--line);border-radius:6px;padding:8px;background:var(--chip)}
   .w-title{font-weight:800}
   .w-row{display:flex;flex-wrap:wrap;gap:6px}
 
-  .wchip{border:2px solid var(--line);background:#fff;border-radius:8px;min-width:96px;padding:6px 6px 4px;display:inline-flex;flex-direction:column;align-items:center;gap:2px;cursor:pointer}
+  .wchip{border:2px solid var(--line);background:var(--chip);border-radius:8px;min-width:90px;padding:6px 6px 4px;display:inline-flex;flex-direction:column;align-items:center;gap:2px;cursor:pointer}
   .wchip.active{outline:2px solid #0003}
   .w-main{display:flex;align-items:center;gap:6px}
   .w-dot{width:10px;height:10px;border-radius:50%}
   .w-name{font-weight:600}
   .w-tools{display:flex;gap:4px}
-  .iconbtn{border:1px solid var(--line);background:#fff;border-radius:4px;padding:0 6px;line-height:18px;height:18px;cursor:pointer}
+  .iconbtn{border:1px solid var(--line);background:var(--chip);border-radius:4px;padding:0 6px;line-height:18px;height:18px;cursor:pointer}
   .w-note{font-size:11px;color:var(--muted);max-width:120px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 
-  .toggle{border:2px solid var(--line);background:#fff;border-radius:6px;padding:6px 8px;cursor:pointer;width:100%;text-align:center;margin-top:6px}
+  .toggle{border:2px solid var(--line);background:var(--chip);border-radius:6px;padding:6px 8px;cursor:pointer;width:100%;text-align:center;margin-top:6px}
 
-  .count-pill{border:2px solid var(--line);background:#fff;border-radius:6px;padding:3px 8px;font-size:12px}
+  .count-pill{border:2px solid var(--line);background:var(--chip);border-radius:6px;padding:3px 8px;font-size:12px}
   .right .head{display:flex;gap:8px;align-items:center;margin-bottom:8px;flex-wrap:wrap}
-  .zones{border:2px solid var(--line);border-radius:6px;background:#fff;min-height:320px;padding:8px}
+  .zones{border:2px solid var(--line);border-radius:6px;background:var(--chip);min-height:320px;padding:8px}
   .zone{border:2px dashed var(--line);border-radius:6px;padding:8px;margin:8px 0}
   .zone .zhead{display:flex;gap:8px;align-items:center;margin-bottom:6px}
   .zone .slot{display:flex;flex-wrap:wrap;gap:6px}
 
-  .assign{border:2px solid var(--line);border-radius:8px;padding:4px 6px;display:inline-flex;gap:4px;align-items:center;flex-direction:column;min-width:96px;background:#fff}
+  .assign{border:2px solid var(--line);border-radius:8px;padding:4px 6px;display:inline-flex;gap:4px;align-items:center;flex-direction:column;min-width:90px;background:var(--chip)}
   .assign .row1{display:flex;gap:6px;align-items:center}
   .assign .nm{font-weight:600}
   .assign .small{font-size:11px;color:var(--muted);max-width:120px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -70,24 +92,27 @@
 
   .muted{color:var(--muted)}
   .modal{position:fixed;inset:0;background:rgba(0,0,0,.35);display:flex;align-items:center;justify-content:center;padding:10px;z-index:50}
-  .dialog{background:#fff;border:2px solid var(--line);border-radius:8px;max-width:95vw;max-height:95vh;overflow:auto}
+  .dialog{background:var(--chip);border:2px solid var(--line);border-radius:8px;max-width:95vw;max-height:95vh;overflow:auto}
   .dialog .pad{padding:10px}
 
+  /* схема */
+  .plan-wrap{position:relative;max-width:92vw}
+  .plan-img{width:100%;height:auto;display:block}
+  .plan-tags{position:absolute;inset:0;pointer-events:auto}
+  .tag{position:absolute;padding:6px 8px;border-radius:8px;font-size:14px;color:#111;background:rgba(255,255,0,.65);cursor:grab;touch-action:none;user-select:none}
+  .tag:active{cursor:grabbing}
+
+  /* темы банкетов */
   .bt-DR {background:#ffe8e8}
   .bt-Юбилей {background:#e8f7ff}
   .bt-День\ памяти {background:#f3f4f6}
   .bt-Корпоратив {background:#e8fff1}
   .bt-Конференция {background:#fff7e6}
   .bt-Свадьба {background:#fff0f6}
-
-  .plan-wrap{position:relative;max-width:92vw}
-  .plan-img{width:100%;height:auto;display:block}
-  .plan-tags{position:absolute;inset:0;pointer-events:none}
-  .tag{position:absolute;padding:2px 4px;border-radius:4px;font-size:10px;color:#111;background:rgba(255,255,0,.6)}
 </style>
 </head>
 <body>
-<div class="wrap">
+<div class="wrap" id="app">
 
   <!-- ВЕРХ -->
   <div class="topbar box pad">
@@ -99,7 +124,7 @@
 
       <div class="ctrl wday" id="wday">День недели<br/>Число.Месяц.</div>
 
-      <div id="shiftBadge" class="badge">В смене 0 человек</div>
+      <div id="shiftBadge" class="badge">В смена 0 человек</div>
 
       <button class="ctrl" id="sendBtn">Отправить</button>
       <button class="ctrl" id="sendPlanBtn">Отправить схему</button>
@@ -107,6 +132,12 @@
       <button class="ctrl" id="resetBtn">Сбросить все</button>
 
       <div class="grow"></div>
+
+      <select id="themeSel" class="ctrl mini" title="Тема">
+        <option value="light">Светлая</option>
+        <option value="dark">Тёмная</option>
+        <option value="daltonic">Дальтоник</option>
+      </select>
 
       <button class="ctrl" id="refreshBtn">Обновить</button>
       <button class="ctrl" id="addTextBtn">Добавить текст</button>
@@ -178,7 +209,7 @@
 'use strict';
 
 /* ===== Константы/иконки ===== */
-const STORAGE='rota-mobile-v5';
+const STORAGE='rota-mobile-v6';
 const MAX_AGE_DAYS=60;
 const DEFAULT_HALLS={
   'Основной зал':['Весь зал','Зона окна','5-я линия','Столы 7,8,9','Столы 10,11,12','Подиум'],
@@ -191,13 +222,10 @@ const DEFAULT_HALLS={
 const SH1=['Элона','Полина','Настя','Виктор','Натали Ч.','Рома','Ксюша'];
 const SH2=['Юля','Игорь','Катя','Наташа В.','Наташа Вел.','Артем','Маша','Инна','Лёша'];
 
-const HALL_ICONS={
-  'Основной зал':'🏛️','Малый (банкетный) зал':'🎊','ВИП-комнаты':'👑','Лофт':'🧱','Веранда':'🌴','Винная комната':'🍷'
-};
+const HALL_ICONS={'Основной зал':'🏛️','Малый (банкетный) зал':'🎊','ВИП-комнаты':'👑','Лофт':'🧱','Веранда':'🌴','Винная комната':'🍷'};
 const ZONE_ICONS={
-  'Весь зал':'🏛️','Зона окна':'🪟','5-я линия':'📚','Столы 7,8,9':'🍽️','Столы 10,11,12':'🍽️🍽️','Подиум':'🪜',
-  'МБЗ':'🎉','Все ВИПы':'👑','Большой ВИП':'🔥','Малый ВИП':'📚','Каюта':'🛞','Лиенда':'🌊','Веранда 1':'🚭','Веранда 2':'🚬',
-  'Лофт':'🧱','Винная комната':'🍷'
+  'Весь зал':'🏛️','Зона окна':'🪟','5-я линия':'📚','Столы 7,8,9':'🍽️','Столы 10,11,12':'🍽️','Подиум':'🪜',
+  'МБЗ':'🎉','Все ВИПы':'👑','Большой ВИП':'🔥','Малый ВИП':'📚','Каюта':'🛞','Лиенда':'🌊','Веранда 1':'🚭','Веранда 2':'🚬','Лофт':'🧱','Винная комната':'🍷'
 };
 
 const BANQUET_META={
@@ -206,9 +234,16 @@ const BANQUET_META={
 };
 const BANQUET_TYPES=Object.keys(BANQUET_META);
 
+/* смайлики статусов (#17) */
+const NOTE_EMOJI={
+  'Помощь в ОЗ':'🪟','Помощь на ВИПах':'👑','Помощь в МБЗ':'🎉',
+  'Помощь на Веранде 1':'🚭','Помощь на Веранде 2':'🚬',
+  'Доставка':'🚚','1-ый номер':'1️⃣','2-ой номер':'2️⃣',
+  'Посуда на цеха':'🍽️','Заполнить водопады':'💧','Минаж':'🍽️','Триджеки':'🍴','Куллера':'💧','Камины':'🔥','Завтрак':'☕'
+};
 const NOTE_PRESETS=[
-  'Помощь в ОЗ','Помощь на ВИПах','Помощь в МБЗ','Помощь на Веранде 1','Помощь на Веранде 2','Доставка','1-ый номер','2-ой номер',
-  'Посуда на цеха','Заполнить водопады','Минаж','Триджеки','Куллера','Камины'
+  'Помощь в ОЗ','Помощь на ВИПах','Помощь в МБЗ','Помощь на Веранде 1','Помощь на Веранде 2',
+  'Доставка','1-ый номер','2-ой номер','Посуда на цеха','Заполнить водопады','Минаж','Триджеки','Куллера','Камины'
 ];
 
 const $=s=>document.querySelector(s), modalTpl=$('#modalTpl');
@@ -221,7 +256,7 @@ function modal(){ const host=modalTpl.content.firstElementChild.cloneNode(true);
 function colorFor(name){ let h=0; for(let i=0;i<name.length;i++) h=(h*31+name.charCodeAt(i))>>>0; const hue=h%360, sat=65, light=70; const fg=(light>60)?'#1f2937':'#fff'; return {bg:`hsl(${hue} ${sat}% ${light}%)`, fg}; }
 
 /* ===== База ===== */
-function defaultDB(){ return {waiters:{shift1:[...SH1],shift2:[...SH2]}, halls:JSON.parse(JSON.stringify(DEFAULT_HALLS)), data:{}, breakfasts:{}}; }
+function defaultDB(){ return {waiters:{shift1:[...SH1],shift2:[...SH2]}, halls:JSON.parse(JSON.stringify(DEFAULT_HALLS)), data:{}, breakfasts:{}, ui:{theme:'light'}}; }
 let db=load()||defaultDB();
 function load(){ try{return JSON.parse(localStorage.getItem(STORAGE));}catch{return null} }
 function save(){ localStorage.setItem(STORAGE, JSON.stringify(db)); }
@@ -232,20 +267,40 @@ function purgeOld(){
 }
 purgeOld(); save();
 
+/* ===== День ===== */
 function curDay(){ return $('#date').value||todayISO(); }
-function dayData(){ const k=curDay(); db.data[k] ||= {assign:{},banquets:[],extraText:'',wNotes:{},ozCustom:null,ozScheme:[]}; return db.data[k]; }
+function dayData(){
+  const k=curDay();
+  const init={assign:{},banquets:[],extraText:'',wNotes:{},ozCustom:null,ozScheme:[]};
+  db.data[k] ||= init;
+  // миграция wNotes: строка -> массив
+  const d=db.data[k]; for(const n of Object.keys(d.wNotes)){ if(typeof d.wNotes[n]==='string') d.wNotes[n]=d.wNotes[n]?[d.wNotes[n]]:[]; }
+  return d;
+}
 
 /* ===== Верх ===== */
 function renderTop(){ const iso=curDay(); $('#wday').innerHTML=`${weekday(iso)}<br>${fmtDate(iso)}.`; }
 
 /* ===== Залы/зоны ===== */
 let currentHall='Основной зал';
+function hallCountsFor(dateISO){
+  const d=db.data[dateISO]; if(!d) return {};
+  const perHall={};
+  Object.keys(d.assign).forEach(h=>{
+    const used=new Set();
+    Object.values(d.assign[h]).forEach(arr=>arr.filter(x=>x.t==='w').forEach(x=>used.add(x.name)));
+    perHall[h]=used.size;
+  });
+  return perHall;
+}
 
 function renderHalls(){
   const bar=$('#hallBar'); bar.innerHTML='';
+  const counts=hallCountsFor(curDay());
   Object.keys(db.halls).forEach(h=>{
     const b=document.createElement('button');
     b.className='hall-btn'; b.textContent=h; if(h===currentHall) b.classList.add('active');
+    if(counts[h]){ const c=document.createElement('span'); c.className='hall-count'; c.textContent=counts[h]; b.appendChild(c); }
     b.onclick=()=>{ currentHall=h; renderHalls(); renderZones(); };
     bar.appendChild(b);
   });
@@ -257,10 +312,15 @@ function banquetTitle(b){
   const place = b.place ? (b.place.zone ? `${b.place.hall} — ${b.place.zone}` : b.place.hall) : '—';
   return `${meta.ico} ${b.type} • ${b.people} чел • ${place}${b.note?` • ${b.note}`:''}`;
 }
+
 function renderBanquetChip(b, small=false, onDelete=null, onEdit=null){
   const meta=BANQUET_META[b.type]||{ico:'🎈',cls:''};
   const s=document.createElement('span'); s.className=`b-chip ${meta.cls}`;
-  s.innerHTML = `<span class="b-ico">${meta.ico}</span><span>${small?`${b.type} • ${b.people} • ${b.place?.zone||b.place?.hall||'—'}`:banquetTitle(b)}</span>`;
+  s.innerHTML = `<span class="b-ico">${meta.ico}</span>
+                 <span class="b-body">
+                   <span class="b-title">${small?`${b.type} • ${b.people} • ${b.place?.zone||b.place?.hall||'—'}`:banquetTitle(b)}</span>
+                   ${(b.note?`<span class="b-note">${b.note}</span>`:'')}
+                 </span>`;
   if(onEdit){ s.style.cursor='pointer'; s.onclick=onEdit; }
   const x=document.createElement('button'); x.className='x'; x.title='Удалить'; x.textContent='×';
   x.onclick=(ev)=>{ ev.stopPropagation(); onDelete && onDelete(); };
@@ -292,16 +352,17 @@ function renderZones(){
           item.style.background=bg; item.style.color=fg;
           const row=document.createElement('div'); row.className='row1';
           row.innerHTML=`<span class="nm">${e.name}</span> <button class="x" title="Удалить">×</button>`;
-          const note=(d.wNotes[e.name]||'');
-          const under=document.createElement('div'); under.className='small'; under.textContent=note;
-          item.appendChild(row); if(note) item.appendChild(under);
-          row.querySelector('.x').onclick=()=>{ arr.splice(i,1); save(); draw(); updateShiftBadge(); };
+          const notes=(d.wNotes[e.name]||[]);
+          const textNotes = notes.map(n=> (NOTE_EMOJI[n]?NOTE_EMOJI[n]+' ':'') + n).join('; ');
+          const under=document.createElement('div'); under.className='small'; under.textContent=textNotes;
+          item.appendChild(row); if(textNotes) item.appendChild(under);
+          row.querySelector('.x').onclick=()=>{ arr.splice(i,1); save(); draw(); updateShiftBadge(); renderHalls(); };
           slot.appendChild(item);
         }else{
-          const b = d.banquets.find(x=>x.id===e.id); if(!b) return;
-          const chip = renderBanquetChip(b,true,
+          const bb = d.banquets.find(x=>x.id===e.id); if(!bb) return;
+          const chip = renderBanquetChip(bb,true,
             ()=>{ arr.splice(i,1); save(); draw(); renderBanquets(); },
-            ()=> editBanquetModal(b)
+            ()=> editBanquetModal(bb)
           );
           slot.appendChild(chip);
         }
@@ -320,36 +381,72 @@ function renderZones(){
           const b=d.banquets.find(x=>x.id===selected.id); if(b){ b.place={hall:currentHall,zone:z}; }
         }
       }
-      save(); draw(); updateShiftBadge();
+      save(); draw(); updateShiftBadge(); renderHalls();
     });
 
     box.appendChild(wrap);
   });
 }
 
-/* схема */
+/* схема с перетаскиванием */
 $('#planBtn').addEventListener('click',()=>{ const host=modal(); const d=dayData();
-  const tagsHTML = (d.ozScheme||[]).map(z=>`<div class="tag" style="left:${z.x}%;top:${z.y}%;background:${z.color}55">${z.label}</div>`).join('');
+  const tagsHTML = (d.ozScheme||[]).map((z,i)=>`<div class="tag" data-i="${i}" style="left:${z.x}%;top:${z.y}%;background:${z.color}AA">${z.label}</div>`).join('');
   host.body.innerHTML=`
-    <div class="muted mini" style="margin-bottom:6px">Схема: Основной зал</div>
-    <div class="plan-wrap">
-      <img src="oz-scheme.png" alt="Схема" class="plan-img"/>
-      <div class="plan-tags">${tagsHTML}</div>
+    <div class="muted mini" style="margin-bottom:6px">Схема: Основной зал (перетаскивай метки)</div>
+    <div class="plan-wrap" id="planWrap">
+      <img src="oz-scheme.png" alt="Схема" class="plan-img" id="planImg"/>
+      <div class="plan-tags" id="planTags">${tagsHTML}</div>
     </div>
     <div class="row" style="margin-top:8px">
-      <button class="ctrl mini" id="openSchemeZone">Зонирование по схеме (β)</button>
+      <button class="ctrl mini" id="openSchemeZone">Добавить зону (β)</button>
       <a class="ctrl mini" href="oz-scheme.png" target="_blank" rel="noopener">Открыть</a>
       <button class="ctrl mini" id="c">Закрыть</button>
     </div>`;
   host.body.querySelector('#c').onclick=host.close;
   host.body.querySelector('#openSchemeZone').onclick=()=>{ host.close(); ozSchemeModal(); };
+
+  const wrap=host.body.querySelector('#planWrap');
+  const tags=host.body.querySelectorAll('.tag');
+
+  let dragging=null, start={x:0,y:0}, rect=null;
+  function setPos(el, px, py){
+    let x=Math.max(0, Math.min(100, px)), y=Math.max(0, Math.min(100, py));
+    const idx=+el.dataset.i;
+    d.ozScheme[idx].x=x; d.ozScheme[idx].y=y;
+    el.style.left=x+'%'; el.style.top=y+'%';
+    save();
+  }
+  function onDown(e){
+    dragging=e.target.closest('.tag'); if(!dragging) return;
+    rect=wrap.getBoundingClientRect();
+    if(e.touches){ start.x=e.touches[0].clientX; start.y=e.touches[0].clientY; }
+    else { start.x=e.clientX; start.y=e.clientY; }
+    e.preventDefault();
+    window.addEventListener('mousemove',onMove,{passive:false});
+    window.addEventListener('touchmove',onMove,{passive:false});
+    window.addEventListener('mouseup',onUp,{once:true});
+    window.addEventListener('touchend',onUp,{once:true});
+  }
+  function onMove(e){
+    if(!dragging) return;
+    let cx, cy;
+    if(e.touches){ cx=e.touches[0].clientX; cy=e.touches[0].clientY; }
+    else { cx=e.clientX; cy=e.clientY; }
+    const relX = (cx-rect.left)/rect.width*100;
+    const relY = (cy-rect.top)/rect.height*100;
+    setPos(dragging, relX, relY);
+    e.preventDefault();
+  }
+  function onUp(){ dragging=null; }
+  wrap.addEventListener('mousedown',onDown);
+  wrap.addEventListener('touchstart',onDown,{passive:false});
 });
 
 /* Свои зоны/стандарт/сброс */
 $('#ozStd').onclick=()=>{ const d=dayData(); d.ozCustom=null; db.halls['Основной зал']=DEFAULT_HALLS['Основной зал'].slice(); save(); renderZones(); };
 $('#ozCustom').onclick=()=>{ const d=dayData(); openCustomZonesModal(d); };
 $('#ozReset').onclick=()=>{ if(!confirm('Удалить все созданные зоны и очистить назначения Основного зала?')) return;
-  const d=dayData(); d.ozCustom=null; d.assign['Основной зал']={}; db.halls['Основной зал']=DEFAULT_HALLS['Основной зал'].slice();
+  const d=dayData(); d.ozCustom=null; d.ozScheme=[]; d.assign['Основной зал']={}; db.halls['Основной зал']=DEFAULT_HALLS['Основной зал'].slice();
   save(); renderZones();
 };
 $('#ozScheme').onclick=()=>ozSchemeModal();
@@ -373,7 +470,7 @@ function openCustomZonesModal(d){
   host.body.querySelector('#cl').onclick=host.close;
 }
 
-/* Зонирование по схеме (β) */
+/* Зонирование по схеме (создание меток) */
 function ozSchemeModal(){
   const host=modal(); const d=dayData();
   host.body.innerHTML=`
@@ -383,7 +480,7 @@ function ozSchemeModal(){
       <div><div class="muted mini">Столы</div><input id="zTables" class="ctrl" placeholder="1,2,3"/></div>
       <div><div class="muted mini">Цвет</div><input id="zColor" class="ctrl" type="color" value="#ffd84d"/></div>
     </div>
-    <div class="muted mini" style="margin-top:6px">Для метки укажи позицию (0–100%)</div>
+    <div class="muted mini" style="margin-top:6px">Позиция метки (0–100%)</div>
     <div class="row" style="gap:6px">
       <div><div class="muted mini">Слева %</div><input id="zX" class="ctrl" type="number" min="0" max="100" value="50"/></div>
       <div><div class="muted mini">Сверху %</div><input id="zY" class="ctrl" type="number" min="0" max="100" value="50"/></div>
@@ -410,7 +507,7 @@ function ozSchemeModal(){
 let selected=null;
 
 function waiterChip(name){
-  const note=dayData().wNotes[name]||''; const {bg,fg}=colorFor(name);
+  const notes=dayData().wNotes[name]||[]; const {bg,fg}=colorFor(name);
   const chip=document.createElement('div'); chip.className='wchip'; if(selected&&selected.kind==='w'&&selected.name===name) chip.classList.add('active');
 
   const main=document.createElement('div'); main.className='w-main';
@@ -420,8 +517,8 @@ function waiterChip(name){
   const edit=document.createElement('button'); edit.className='iconbtn'; edit.title='Комментарий'; edit.textContent='✎';
   const del=document.createElement('button'); del.className='iconbtn'; del.title='Удалить имя'; del.textContent='×';
   tools.append(edit,del); main.append(dot,nm,tools);
-
-  const sub=document.createElement('div'); sub.className='w-note'; sub.textContent=note;
+  const sub=document.createElement('div'); sub.className='w-note';
+  sub.textContent = notes.map(n=> (NOTE_EMOJI[n]?NOTE_EMOJI[n]+' ':'')+n).join('; ');
   chip.append(main, sub);
 
   chip.addEventListener('click',(e)=>{ if(e.target===edit||e.target===del) return; selected=(selected&&selected.kind==='w'&&selected.name===name)?null:{kind:'w',name}; highlightWaiters(); });
@@ -438,7 +535,7 @@ function waiterChip(name){
     });
     delete d.wNotes[name];
     if(selected&&selected.kind==='w'&&selected.name===name) selected=null;
-    save(); renderWaiters(); renderZones(); updateShiftBadge();
+    save(); renderWaiters(); renderZones(); updateShiftBadge(); renderHalls();
   });
 
   return chip;
@@ -447,21 +544,32 @@ function renderWaiters(){ const r1=$('#wRow1'), r2=$('#wRow2'); r1.innerHTML='';
 function highlightWaiters(){ document.querySelectorAll('.wchip').forEach(el=>{ const n=el.querySelector('.w-name')?.textContent||''; if(selected && selected.kind==='w' && selected.name===n) el.classList.add('active'); else el.classList.remove('active'); }); }
 
 function editNoteModal(name){
-  const host=modal(); const d=dayData(); const cur=d.wNotes[name]||'';
+  const host=modal(); const d=dayData(); const cur=d.wNotes[name]||[];
   host.body.innerHTML=`
-    <div class="muted mini" style="margin-bottom:6px">Комментарий для: <strong>${name}</strong></div>
+    <div class="muted mini" style="margin-bottom:6px">Комментарии для: <strong>${name}</strong></div>
     <div class="row" style="gap:6px;flex-wrap:wrap;margin-bottom:6px">
-      ${NOTE_PRESETS.map(t=>`<button class="ctrl mini preset">${t}</button>`).join('')}
+      ${NOTE_PRESETS.map(t=>`<label class="ctrl mini" style="display:inline-flex;gap:6px;align-items:center">
+        <input type="checkbox" class="preset" value="${t.replace(/"/g,'&quot;')}" ${cur.includes(t)?'checked':''}/> ${(NOTE_EMOJI[t]||'')} ${t}
+      </label>`).join('')}
     </div>
     <div class="row" style="gap:6px;align-items:flex-end">
-      <div style="flex:1"><div class="muted mini">Свой комментарий</div><input id="own" class="ctrl" placeholder="Текст..." value="${cur.replace(/"/g,'&quot;')}"/></div>
-      <button id="ok" class="ctrl primary">OK</button><button id="clr" class="ctrl">Очистить</button>
+      <div style="flex:1">
+        <div class="muted mini">Добавить свой (через ; можно несколько)</div>
+        <input id="own" class="ctrl" placeholder="например: Усиление; Выход к 18:00"/>
+      </div>
+      <button id="ok" class="ctrl primary">OK</button>
+      <button id="clr" class="ctrl">Очистить</button>
     </div>`;
-  host.body.querySelectorAll('.preset').forEach(btn=>{ btn.onclick=()=>{ d.wNotes[name]=btn.textContent; save(); renderWaiters(); renderZones(); host.close(); }; });
-  host.body.querySelector('#ok').onclick=()=>{ d.wNotes[name]=host.body.querySelector('#own').value.trim(); save(); renderWaiters(); renderZones(); host.close(); };
-  host.body.querySelector('#clr').onclick=()=>{ delete d.wNotes[name]; save(); renderWaiters(); renderZones(); host.close(); };
+  host.body.querySelector('#ok').onclick=()=>{
+    const sel=[...host.body.querySelectorAll('.preset:checked')].map(x=>x.value);
+    const own=(host.body.querySelector('#own').value||'').split(';').map(s=>s.trim()).filter(Boolean);
+    d.wNotes[name]=[...sel, ...own];
+    save(); renderWaiters(); renderZones(); host.close();
+  };
+  host.body.querySelector('#clr').onclick=()=>{ d.wNotes[name]=[]; save(); renderWaiters(); renderZones(); host.close(); };
 }
 
+/* Добавить официанта */
 function addWaiterModal(){
   const host=modal();
   host.body.innerHTML=`
@@ -474,7 +582,7 @@ function addWaiterModal(){
   host.body.querySelector('#cl').onclick=host.close;
 }
 
-/* ===== Банкеты ===== */
+/* ===== Банкет ===== */
 function renderBanquets(){
   const p=$('#banquetPanel'); p.innerHTML='';
   dayData().banquets.forEach(b=>{
@@ -536,15 +644,15 @@ function openBreakfasts(){
       <button class="ctrl mini" id="sendBr">Отправить завтраки</button>
     </div>
     <div style="margin-top:6px" id="names"></div>
-    <div class="muted mini" style="margin-top:6px">Отметь имена — им будет поставлен комментарий «Завтрак» на выбранную дату.</div>`;
+    <div class="muted mini" style="margin-top:6px">Отметь имена — им будет поставлен статус «Завтрак».</div>`;
   const hostNames=host.body.querySelector('#names');
   function renderNames(){
     hostNames.innerHTML='';
     all.forEach(n=>{
-      const chk=document.createElement('label'); chk.style.display='inline-flex'; chk.style.alignItems='center'; chk.style.gap='6px'; chk.style.margin='4px 8px 0 0';
+      const label=document.createElement('label'); label.style.display='inline-flex'; label.style.alignItems='center'; label.style.gap='6px'; label.style.margin='4px 8px 0 0';
       const box=document.createElement('input'); box.type='checkbox'; box.checked=set.has(n);
       box.onchange=()=>{ box.checked?set.add(n):set.delete(n); persist(); };
-      chk.appendChild(box); chk.appendChild(document.createTextNode(n)); hostNames.appendChild(chk);
+      label.appendChild(box); label.appendChild(document.createTextNode(n)); hostNames.appendChild(label);
     });
   }
   function persist(){
@@ -568,7 +676,7 @@ function buildMessage(){
   const iso=curDay(), d=dayData(), lines=[];
   lines.push('Добрый день, друзья!');
   lines.push(`${fmtDate(iso)} (${weekday(iso)})`);
-  lines.push(`В смене ${countUniqueAssigned()} человек. 🕺`);
+  lines.push(`В смена ${countUniqueAssigned()} человек. 🕺`);
 
   if(d.banquets.length===0) lines.push('Банкеты: 0');
   else{
@@ -586,8 +694,12 @@ function buildMessage(){
     non.forEach(z=>{
       const arr=zones[z];
       const text=arr.map(e=>{
-        if(e.t==='w'){ const note=d.wNotes[e.name]; return note?`${e.name} (${note})`:e.name; }
-        return 'Банкет';
+        if(e.t==='w'){
+          const notes=(d.wNotes[e.name]||[]);
+          const t=notes.length?`${e.name} (${notes.join('; ')})`:e.name;
+          return t;
+        }
+        const bb=d.banquets.find(x=>x.id===e.id); return bb?(`${BANQUET_META[bb.type]?.ico||'🎈'} ${bb.type} ${bb.people}чел`):'Банкет';
       }).join(', ');
       const zico = ZONE_ICONS[z]||'•';
       lines.push(`${zico} ${z}: ${text}`);
@@ -614,7 +726,7 @@ function importFromFile(file){ const r=new FileReader(); r.onload=()=>{ try{
 
 /* ===== Счётчики/статистика ===== */
 function countUniqueAssigned(){ const d=dayData(); const used=new Set(); Object.values(d.assign).forEach(zmap=>{ Object.values(zmap).forEach(arr=>{ arr.filter(x=>x.t==='w').forEach(x=>used.add(x.name)); }); }); return used.size; }
-function updateShiftBadge(){ $('#shiftBadge').textContent=`В смене ${countUniqueAssigned()} человек`; }
+function updateShiftBadge(){ $('#shiftBadge').textContent=`В смена ${countUniqueAssigned()} человек`; }
 
 function showLayout(){
   const d=dayData(); const host=modal();
@@ -625,7 +737,10 @@ function showLayout(){
     non.forEach(z=>{
       const arr=zones[z];
       const text=arr.map(e=>{
-        if(e.t==='w'){ const note=d.wNotes[e.name]; return note?`${e.name} <span class="muted">(${note})</span>`:e.name; }
+        if(e.t==='w'){
+          const notes=(d.wNotes[e.name]||[]); const t=notes.length?`${e.name} <span class="muted">(${notes.join('; ')})</span>`:e.name;
+          return t;
+        }
         const b=d.banquets.find(x=>x.id===e.id); return b?banquetTitle(b):'Банкет';
       }).join(', ');
       lines.push(`<div>${(ZONE_ICONS[z]||'•')} ${z}: ${text||'—'}</div>`);
@@ -638,7 +753,7 @@ function showLayout(){
 function showStats(){
   const until=curDay();
   const halls=Object.keys(db.halls);
-  const stat1 = {}, stat2 = {}; // <-- FIX
+  const stat1 = {}, stat2 = {};
 
   Object.keys(db.data).filter(k=>k<=until).forEach(k=>{
     const d=db.data[k];
@@ -674,12 +789,26 @@ function showStats(){
   host.body.querySelector('#ok').onclick=host.close;
 }
 
+/* ===== Тема ===== */
+function applyTheme(){
+  const t=db.ui?.theme||'light'; document.documentElement.removeAttribute('data-theme');
+  if(t==='dark') document.documentElement.setAttribute('data-theme','dark');
+  if(t==='daltonic') document.documentElement.setAttribute('data-theme','daltonic');
+  $('#themeSel').value=t;
+}
+
 /* ===== Инициализация ===== */
-function renderAll(){ renderTop(); renderHalls(); renderZones(); renderWaiters(); renderBanquets(); updateShiftBadge(); }
+function renderAll(){ renderTop(); renderHalls(); renderZones(); renderWaiters(); renderBanquets(); updateShiftBadge(); applyTheme(); }
 
 document.addEventListener('DOMContentLoaded', ()=>{
+  // дата
   const dEl=$('#date'); dEl.value=dEl.value||todayISO(); dEl.onchange=()=>{ renderAll(); save(); };
+  // тема
+  $('#themeSel').onchange=(e)=>{ db.ui=db.ui||{}; db.ui.theme=e.target.value; save(); applyTheme(); };
+
   renderAll();
+
+  // кнопки
   $('#toggleShift2').onclick=()=>{ const w=$('#wRow2Wrap'); w.style.display=(w.style.display==='none')?'block':'none'; };
   $('#addWaiterBtn').onclick=addWaiterModal;
   $('#addBanquetBtn').onclick=addBanquetModal;
@@ -692,10 +821,11 @@ document.addEventListener('DOMContentLoaded', ()=>{
   $('#refreshBtn').onclick=()=>location.reload();
   $('#resetBtn').onclick=()=>{ if(!confirm('Очистить всю информацию за выбранный день?')) return; const k=curDay(); db.data[k]={assign:{},banquets:[],extraText:'',wNotes:{},ozCustom:null,ozScheme:[]}; save(); renderAll(); };
   const fileInput=$('#importFile'); $('#importBtn').onclick=()=>fileInput.click(); fileInput.onchange=(e)=>{ const f=e.target.files&&e.target.files[0]; if(f) importFromFile(f); e.target.value=''; };
+
+  // Регистрация SW (PWA)
+  if('serviceWorker' in navigator){ navigator.serviceWorker.register('sw.js').catch(()=>{}); }
 });
 })();
 </script>
 </body>
 </html>
-
-
