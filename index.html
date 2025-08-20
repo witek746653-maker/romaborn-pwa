@@ -3,13 +3,10 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover"/>
-<title>Распределение — мобильная SVG</title>
+<title>Распределение — мобильный лэйаут</title>
 
-<!-- PWA -->
 <link rel="manifest" href="manifest.webmanifest">
 <meta name="theme-color" content="#ffe9c4">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
 <style>
   :root{
@@ -18,187 +15,147 @@
   }
   *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
   html,body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.28 system-ui,-apple-system,Segoe UI,Roboto;height:100vh;overflow:hidden}
-  button,input,select,textarea{font:inherit;color:inherit}
-
-  /* Общие блоки */
+  button,input,select{font:inherit;color:inherit}
   .box{border:2px solid var(--line);border-radius:6px;background:var(--panel)}
-  .row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
   .pad{padding:8px}
-  .ctrl{border:2px solid var(--line);background:var(--chip);border-radius:6px;padding:6px 10px;cursor:pointer}
-  .ctrl.primary{background:var(--accent)}
-  .mini{font-size:12px;padding:4px 8px}
-  .muted{color:var(--muted)}
-  .badge{border:2px solid var(--line);background:var(--badge);color:#1f1a0f;border-radius:20px;padding:6px 12px;font-weight:700}
-  .pill{border:2px solid var(--line);background:var(--chip);border-radius:20px;padding:6px 10px;cursor:pointer}
+  .row{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
 
-  /* Компоновка десктоп */
+  .ctrl{border:2px solid var(--line);background:var(--chip);border-radius:6px;padding:6px 8px;cursor:pointer}
+  .ctrl.mini{padding:4px 6px;font-size:12px}
+  .badge{border:2px solid var(--line);background:var(--badge);color:#1f1a0f;border-radius:20px;padding:4px 10px;font-weight:700;font-size:12px}
+
+  /* ===== ДЕСКТОП (как раньше) ===== */
   .wrap{max-width:980px;margin:0 auto;padding:8px}
   .main{display:grid;grid-template-columns:1fr 1.2fr;gap:10px}
   .left{display:grid;gap:10px}
+  .topbar .controls{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
 
-  /* Компоновка мобильная без внешнего скролла: 20/10/30/40 */
+  /* ===== МОБИЛЬНЫЙ НОВЫЙ ЛЭЙАУТ ===== */
   @media (max-width:760px){
-    .wrap{height:100vh;display:grid;grid-template-rows:20% 10% 30% 40%;gap:6px;padding:6px}
-    .topbar.box{grid-row:1;min-height:0;overflow:auto}
-    .hallsSec.box{grid-row:2;min-height:0;overflow:auto}
+    .wrap{height:100vh;display:grid;grid-template-rows:15% 5% 20% 5% auto;gap:6px;padding:6px}
+    .topbar{grid-row:1;min-height:0;overflow:auto}
+    .hallsSec{grid-row:2;min-height:0;overflow:auto}
     .waitersSec{grid-row:3;min-height:0;overflow:auto}
-    .zonesSec{grid-row:4;min-height:0;overflow:hidden;display:flex;flex-direction:column}
-    .main{display:contents}
+    .zonesSec{grid-row:4;min-height:0;overflow:auto}
+    .planSec{grid-row:5;min-height:0;overflow:hidden;display:flex;flex-direction:column}
+    .topbar .controls{gap:4px}
+    .topbar .ctrl, .topbar .badge {transform:scale(.92); transform-origin:left center}
   }
 
-  /* Шапка */
-  .topbar{display:grid;grid-template-columns:1fr;gap:8px}
-  .controls{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
-  .grow{flex:1 1 auto}
-  .wday{min-width:160px}
+  /* шапка */
+  .wday{min-width:136px}
+  .controls .grow{flex:1 1 auto}
 
-  /* Залы */
-  .halls{display:flex;flex-wrap:nowrap;gap:8px;overflow:auto;padding-bottom:2px}
-  .hall-btn{position:relative;border:2px solid var(--line);background:var(--chip);border-radius:6px;padding:6px 10px;cursor:pointer;white-space:nowrap}
+  /* «залы» строка (без заголовка) */
+  .halls{display:flex;gap:6px;overflow:auto}
+  .hall-btn{border:2px solid var(--line);background:var(--chip);border-radius:6px;padding:6px 8px;white-space:nowrap}
   .hall-btn.active{background:var(--active)}
-  .hall-count{position:absolute;right:-6px;top:-6px;background:var(--badge);border:2px solid var(--line);border-radius:12px;padding:2px 6px;font-size:11px;line-height:1;color:#1f1a0f}
 
-  /* Официанты */
-  .waiters{border:2px solid var(--line);border-radius:6px;padding:8px;background:var(--chip)}
+  /* официанты */
   .w-row{display:flex;flex-wrap:wrap;gap:6px}
-  .wchip{border:2px solid var(--line);background:var(--chip);border-radius:8px;min-width:100px;max-width:220px;padding:6px 6px 4px;display:inline-flex;flex-direction:column;align-items:flex-start;gap:2px;cursor:pointer}
-  .wchip.active{outline:2px solid #0003}
-  .w-main{display:flex;align-items:center;gap:6px;width:100%}
+  .wchip{border:2px solid var(--line);background:var(--chip);border-radius:8px;min-width:88px;max-width:180px;padding:4px;display:flex;flex-direction:column;gap:2px}
+  .wchip .top{display:flex;gap:6px;align-items:center}
   .w-dot{width:10px;height:10px;border-radius:50%}
-  .w-name{font-weight:600;flex:1}
-  .w-tools{display:flex;gap:4px}
+  .w-name{font-weight:600;flex:1;min-width:0}
+  .w-note{font-size:11px;color:var(--muted);white-space:normal}
   .iconbtn{border:1px solid var(--line);background:var(--chip);border-radius:4px;padding:0 6px;line-height:18px;height:18px;cursor:pointer}
-  .w-note{font-size:11px;color:var(--muted);white-space:normal;overflow:visible}
 
-  /* Зоны: список + схема */
-  .zonesHead{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:6px}
-  .tabs{display:flex;gap:6px}
-  .tab{border:2px solid var(--line);background:var(--chip);border-radius:16px;padding:4px 10px;cursor:pointer}
-  .tab.active{background:var(--active)}
-
-  .zonesBox{border:2px solid var(--line);border-radius:6px;background:var(--chip);min-height:0;flex:1;overflow:auto;padding:8px}
-  .zone{border:2px dashed var(--line);border-radius:6px;padding:8px;margin:8px 0}
-  .zone .zhead{display:flex;gap:8px;align-items:center;margin-bottom:6px}
-  .zone .slot{display:flex;flex-wrap:wrap;gap:6px}
-
-  .assign{border:2px solid var(--line);border-radius:8px;padding:4px 6px;display:inline-flex;gap:4px;align-items:flex-start;flex-direction:column;min-width:110px;background:var(--chip)}
+  /* панель «Зоны» */
+  .zonesHead{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+  .zonesBox{border:2px solid var(--line);border-radius:6px;background:var(--chip);padding:6px}
+  .zone{border:2px dashed var(--line);border-radius:6px;padding:6px;margin-top:6px}
+  .assign{border:2px solid var(--line);border-radius:8px;padding:4px 6px;display:inline-flex;flex-direction:column;gap:2px;min-width:100px;background:var(--chip)}
   .assign .row1{display:flex;gap:6px;align-items:center}
-  .assign .nm{font-weight:600}
-  .assign .small{font-size:11px;color:var(--muted)}
   .assign .x{border:none;background:none;font-weight:900;font-size:16px;line-height:1;cursor:pointer}
+  .assign .small{font-size:11px;color:var(--muted)}
 
-  /* Банкет-плашки компакт */
-  .banquets{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
-  .b-chip{border:2px solid var(--line);border-radius:10px;padding:4px 6px;display:inline-flex;align-items:flex-start;gap:6px;color:var(--ink);background:var(--chip);min-width:0}
-  .b-ico{font-size:16px;line-height:1;margin-top:1px}
-  .b-body{display:flex;flex-direction:column;gap:1px;min-width:0}
-  .b-title{font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:210px}
-  .b-note{font-size:11px;color:var(--muted);white-space:normal}
-  .b-chip .x{border:none;background:none;font-weight:900;font-size:16px;line-height:1;cursor:pointer;margin-left:2px}
-
-  /* SVG схема */
+  /* СХЕМА — полотно */
   .svgWrap{position:relative;height:100%;border:2px dashed var(--line);border-radius:6px;overflow:hidden;background:#fff}
-  .svgToolbar{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:6px}
   .planSVG{position:absolute;inset:0;width:100%;height:100%}
   .zone-shape{cursor:pointer;transition:filter .15s,stroke-width .15s}
   .zone-shape:hover{filter:brightness(1.06);stroke-width:3}
-  .tag{position:absolute;padding:6px 8px;border-radius:8px;font-size:14px;color:#111;background:rgba(255,255,0,.65);cursor:grab;touch-action:none;user-select:none}
+  .soft{opacity:.45}
 
-  /* Модалка */
+  /* модалка */
   .modal{position:fixed;inset:0;background:rgba(0,0,0,.35);display:flex;align-items:center;justify-content:center;padding:10px;z-index:50}
   .dialog{background:var(--chip);border:2px solid var(--line);border-radius:8px;max-width:95vw;max-height:95vh;overflow:auto}
   .dialog .pad{padding:10px}
 
-  /* темы банкетов (мягкие) */
-  .bt-DR {background:#ffe8e8}
-  .bt-Юбилей {background:#e8f7ff}
-  .bt-День\ памяти {background:#f3f4f6}
-  .bt-Корпоратив {background:#e8fff1}
-  .bt-Конференция {background:#fff7e6}
-  .bt-Свадьба {background:#fff0f6}
+  /* банкет-плашки (компакт) */
+  .banquets{display:flex;gap:6px;flex-wrap:wrap}
+  .b-chip{border:2px solid var(--line);border-radius:10px;padding:4px 6px;display:inline-flex;align-items:flex-start;gap:6px;background:var(--chip)}
+  .b-ico{font-size:15px}
+  .b-body{display:flex;flex-direction:column;gap:1px}
+  .b-title{font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:210px}
+  .b-note{font-size:11px;color:var(--muted)}
 </style>
 </head>
 <body>
 <div class="wrap">
 
-  <!-- ШАПКА (20%) -->
+  <!-- ШАПКА (15%) -->
   <div class="topbar box pad">
     <div class="controls">
-      <div class="ctrl">
-        <div class="muted mini">Календарь</div>
-        <input id="date" type="date"/>
-      </div>
-      <div class="ctrl wday" id="wday">День недели<br/>Число.Месяц.</div>
+      <div class="ctrl mini"><div class="muted" style="font-size:11px">Дата</div><input id="date" type="date"/></div>
+      <div id="wday" class="ctrl mini wday">—</div>
       <div id="shiftBadge" class="badge">В смена 0 человек</div>
-      <button class="ctrl" id="sendBtn">Отправить</button>
-      <button class="ctrl" id="sendPlanBtn">Отправить схему</button>
-      <button class="ctrl" id="breakfastBtn">График на завтраки</button>
+      <button class="ctrl mini" id="sendBtn">Отправить</button>
+      <button class="ctrl mini" id="sendPlanBtn">Отправить схему</button>
+      <button class="ctrl mini" id="breakfastBtn">График завтраков</button>
       <div class="grow"></div>
+      <button class="ctrl mini" id="addWaiterBtn">Добавить официанта</button>
       <button class="ctrl mini" id="saveBtn">Сохранить</button>
       <button class="ctrl mini" id="importBtn">Импорт</button>
       <input id="importFile" type="file" accept="application/json" hidden/>
     </div>
 
-    <div class="controls">
-      <div class="muted">Банкеты</div>
-      <div id="banquetPanel" class="banquets"></div>
-      <button class="ctrl primary mini" id="addBanquetBtn">Добавить</button>
+    <div class="row" style="margin-top:6px">
+      <div class="banquets" id="banquetPanel"></div>
+      <button class="ctrl mini" id="addBanquetBtn">Добавить банкет</button>
     </div>
   </div>
 
-  <!-- ЗАЛЫ (10%) -->
+  <!-- ЗАЛЫ (5%) — без слова «Залы» -->
   <div class="hallsSec box pad">
-    <div class="muted mini" style="margin-bottom:6px">Залы</div>
     <div class="halls" id="hallBar"></div>
   </div>
 
-  <!-- ОФИЦИАНТЫ (30%) -->
-  <div class="waitersSec">
-    <div class="box pad">
-      <div class="row" style="justify-content:space-between">
-        <div class="muted mini">Официанты</div>
-        <button class="ctrl mini" id="addWaiterBtn">Добавить</button>
-      </div>
-      <div class="muted mini">Смена 1</div>
-      <div id="wRow1" class="w-row"></div>
-      <button id="toggleShift2" class="ctrl mini" style="margin-top:6px">Смена 2</button>
-      <div id="wRow2Wrap" style="display:none;margin-top:6px">
-        <div class="muted mini">Смена 2</div>
-        <div id="wRow2" class="w-row"></div>
-      </div>
+  <!-- ОФИЦИАНТЫ (20%) -->
+  <div class="waitersSec box pad">
+    <div class="w-row" id="wRow1"></div>
+    <button id="toggleShift2" class="ctrl mini">Смена 2</button>
+    <div id="wRow2Wrap" style="display:none;margin-top:4px">
+      <div class="w-row" id="wRow2"></div>
     </div>
   </div>
 
-  <!-- ЗОНЫ (40%) -->
-  <div class="zonesSec">
+  <!-- ЗОНЫ (5%) -->
+  <div class="zonesSec box pad">
     <div class="zonesHead">
-      <div class="muted">Зоны</div>
-      <div class="tabs">
-        <button class="tab active" id="tabList">Список</button>
-        <button class="tab" id="tabMap">Схема</button>
-        <button class="tab" id="tabDraw">Рисовать зону</button>
-      </div>
-      <div class="pill" id="zoneTitle">—</div>
-      <div class="grow"></div>
-      <div class="muted mini">Тап по зоне назначает выбранного официанта/банкет</div>
-    </div>
-
-    <!-- LIST -->
-    <div id="zonesBox" class="zonesBox"></div>
-
-    <!-- SVG MAP -->
-    <div id="mapBox" class="zonesBox" style="display:none;padding:6px">
-      <div class="svgToolbar">
-        <button class="ctrl mini" id="sendPngBtn">Отправить схему</button>
-        <button class="ctrl mini" id="clearSelBtn">Очистить выбор</button>
-      </div>
-      <div class="svgWrap" id="svgWrap">
-        <svg id="planSVG" class="planSVG" viewBox="0 0 1000 700" aria-label="Схема зала">
-          <g id="polysLayer"></g>
-        </svg>
-      </div>
+      <div class="ctrl mini" id="tabList">Список</div>
+      <div class="ctrl mini" id="tabDraw">Рисовать зону</div>
+      <div class="ctrl mini" id="tabMap">Схема</div>
+      <div class="ctrl mini" id="clearSelBtn">Очистить выбор</div>
+      <div class="ctrl mini" id="sendPngBtn">Отправить схему</div>
+      <div class="ctrl mini" id="zoneTitle">—</div>
     </div>
   </div>
+
+  <!-- ПОЛОТНО СХЕМЫ (всё оставшееся место) -->
+  <div class="planSec box pad">
+    <!-- Список зон (по желанию открыть) -->
+    <div id="zonesBox" class="zonesBox" style="display:none"></div>
+
+    <!-- SVG-схема -->
+    <div class="svgWrap" id="svgWrap">
+      <svg id="planSVG" class="planSVG" viewBox="0 0 1113 768" aria-label="Схема зала">
+        <!-- фон-картинка (та, что ты прислал) -->
+        <image href="oz-scheme.png" x="0" y="0" width="1113" height="768" opacity="0.28"/>
+        <g id="polysLayer"></g>
+      </svg>
+    </div>
+  </div>
+
 </div>
 
 <!-- Модалка -->
@@ -207,12 +164,11 @@
 </template>
 
 <script>
-(function(){
+(() => {
 'use strict';
-
-/* ===== Константы/иконки/пресеты ===== */
-const STORAGE='rota-mobile-v7';
-const MAX_AGE_DAYS=60;
+/* ==== Утилиты/константы ==== */
+const $=s=>document.querySelector(s), modalTpl=$('#modalTpl');
+const STORAGE='rota-mobile-v8';
 const DEFAULT_HALLS={
   'Основной зал':['Весь зал','Зона окна','5-я линия','Столы 7,8,9','Столы 10,11,12','Подиум'],
   'Малый (банкетный) зал':['МБЗ'],
@@ -223,548 +179,245 @@ const DEFAULT_HALLS={
 };
 const SH1=['Элона','Полина','Настя','Виктор','Натали Ч.','Рома','Ксюша'];
 const SH2=['Юля','Игорь','Катя','Наташа В.','Наташа Вел.','Артем','Маша','Инна','Лёша'];
+const BANQUET_TYPES=['ДР','Юбилей','День памяти','Корпоратив','Конференция','Свадьба'];
+const NOTE_PRESETS=['Помощь в ОЗ','Помощь на ВИПах','Помощь в МБЗ','Помощь на Веранде 1','Помощь на Веранде 2','Доставка','1-ый номер','2-ой номер'];
 
-const HALL_ICONS={'Основной зал':'🏛️','Малый (банкетный) зал':'🎊','ВИП-комнаты':'👑','Лофт':'🧱','Веранда':'🌴','Винная комната':'🍷'};
-const ZONE_ICONS={
-  'Весь зал':'🏛️','Зона окна':'🪟','5-я линия':'📚','Столы 7,8,9':'🍽️','Столы 10,11,12':'🍽️','Подиум':'🪜',
-  'МБЗ':'🎉','Все ВИПы':'👑','Большой ВИП':'🔥','Малый ВИП':'📚','Каюта':'🛞','Лиенда':'🌊','Веранда 1':'🚭','Веранда 2':'🚬','Лофт':'🧱','Винная комната':'🍷'
-};
-const BANQUET_META={
-  'ДР':{ico:'🎂',cls:'bt-DR'}, 'Юбилей':{ico:'🎉',cls:'bt-Юбилей'}, 'День памяти':{ico:'🕯️',cls:'bt-День памяти'},
-  'Корпоратив':{ico:'🏢',cls:'bt-Корпоратив'}, 'Конференция':{ico:'🎤',cls:'bt-Конференция'}, 'Свадьба':{ico:'💍',cls:'bt-Свадьба'},
-};
-const BANQUET_TYPES=Object.keys(BANQUET_META);
-const NOTE_PRESETS=['Помощь в ОЗ','Помощь на ВИПах','Помощь в МБЗ','Помощь на Веранде 1','Помощь на Веранде 2','Доставка','1-ый номер','2-ой номер','Посуда на цеха','Заполнить водопады','Минаж','Триджеки','Куллера','Камины'];
-const NOTE_EMOJI={ 'Помощь в ОЗ':'🪟','Помощь на ВИПах':'👑','Помощь в МБЗ':'🎉','Помощь на Веранде 1':'🚭','Помощь на Веранде 2':'🚬','Доставка':'🚚','1-ый номер':'1️⃣','2-ой номер':'2️⃣','Посуда на цеха':'🍽️','Заполнить водопады':'💧','Минаж':'🍽️','Триджеки':'🍴','Куллера':'💧','Камины':'🔥','Завтрак':'☕'};
-
-const $=s=>document.querySelector(s), modalTpl=$('#modalTpl');
-
-/* ===== Утилиты ===== */
-function todayISO(){ const z=(new Date()).getTimezoneOffset()*60000; return new Date(Date.now()-z).toISOString().slice(0,10); }
-function weekday(iso){ const d=new Date(iso+'T00:00'); return ['воскресенье','понедельник','вторник','среда','четверг','пятница','суббота'][d.getDay()]; }
-function fmtDate(iso){ const [y,m,d]=iso.split('-'); return `${d}.${m}.${y}`; }
-function modal(){ const host=modalTpl.content.firstElementChild.cloneNode(true); const body=host.querySelector('#modalBody'); function close(){ host.remove(); } host.addEventListener('click',e=>{ if(e.target===host) close(); }); document.body.appendChild(host); return {el:host,body,close}; }
-function colorFor(name){ let h=0; for(let i=0;i<name.length;i++) h=(h*31+name.charCodeAt(i))>>>0; const hue=h%360, sat=65, light=70; const fg=(light>60)?'#1f2937':'#fff'; return {bg:`hsl(${hue} ${sat}% ${light}%)`, fg}; }
-function hex2rgba(hex, a){ const v=hex.replace('#',''); const r=parseInt(v.slice(0,2),16), g=parseInt(v.slice(2,4),16), b=parseInt(v.slice(4,6),16); return `rgba(${r},${g},${b},${a})`; }
-
-/* ===== База ===== */
-function defaultDB(){ return {waiters:{shift1:[...SH1],shift2:[...SH2]}, halls:JSON.parse(JSON.stringify(DEFAULT_HALLS)), data:{}, breakfasts:{}, ui:{}, svg:{polys:[]}}; }
+function defaultDB(){ return {waiters:{shift1:[...SH1],shift2:[...SH2]}, halls:JSON.parse(JSON.stringify(DEFAULT_HALLS)), data:{}, breakfasts:{}, svg:{polys:[]}}; }
 let db=load()||defaultDB();
 function load(){ try{return JSON.parse(localStorage.getItem(STORAGE));}catch{return null} }
 function save(){ localStorage.setItem(STORAGE, JSON.stringify(db)); }
-function purgeOld(){
-  const now=new Date(todayISO()+'T00:00'); const day=86400000;
-  for(const k of Object.keys(db.data)){ const d=new Date(k+'T00:00'); if((now-d)/day>MAX_AGE_DAYS) delete db.data[k]; }
-  for(const k of Object.keys(db.breakfasts)){ const d=new Date(k+'T00:00'); if((now-d)/day>MAX_AGE_DAYS) delete db.breakfasts[k]; }
-}
-purgeOld(); save();
+function modal(){ const host=modalTpl.content.firstElementChild.cloneNode(true); const body=host.querySelector('#modalBody'); function close(){ host.remove(); } host.addEventListener('click',e=>{ if(e.target===host) close(); }); document.body.appendChild(host); return {el:host,body,close}; }
+function todayISO(){ const z=(new Date()).getTimezoneOffset()*60000; return new Date(Date.now()-z).toISOString().slice(0,10); }
+function fmtDate(iso){ const [y,m,d]=iso.split('-'); return `${d}.${m}.${y}`; }
+function weekday(iso){ const d=new Date(iso+'T00:00'); return ['вс','пн','вт','ср','чт','пт','сб'][d.getDay()]; } // для WA
+function colorFor(name){ let h=0; for(let i=0;i<name.length;i++) h=(h*31+name.charCodeAt(i))>>>0; const hue=h%360, sat=65, light=70; const fg=(light>60)?'#1f2937':'#fff'; return {bg:`hsl(${hue} ${sat}% ${light}%)`, fg}; }
 
+/* ==== День ==== */
 function curDay(){ return $('#date').value||todayISO(); }
-function dayData(){
-  const k=curDay();
-  const init={assign:{},banquets:[],extraText:'',wNotes:{},ozCustom:null};
-  db.data[k] ||= init;
-  for(const n of Object.keys(db.data[k].wNotes)){ if(typeof db.data[k].wNotes[n]==='string') db.data[k].wNotes[n]=db.data[k].wNotes[n]?[db.data[k].wNotes[n]]:[]; }
-  return db.data[k];
-}
-
-/* ===== Верх/залы ===== */
-let currentHall='Основной зал';
-function renderTop(){ const iso=curDay(); $('#wday').innerHTML=`${weekday(iso)}<br>${fmtDate(iso)}.`; }
-function hallCountsFor(dateISO){
-  const d=db.data[dateISO]; if(!d) return {};
-  const perHall={};
-  Object.keys(d.assign).forEach(h=>{
-    const used=new Set();
-    Object.values(d.assign[h]).forEach(arr=>arr.filter(x=>x.t==='w').forEach(x=>used.add(x.name)));
-    perHall[h]=used.size;
-  });
-  return perHall;
-}
-function renderHalls(){
-  const bar=$('#hallBar'); bar.innerHTML='';
-  const counts=hallCountsFor(curDay());
-  Object.keys(db.halls).forEach(h=>{
-    const b=document.createElement('button');
-    b.className='hall-btn'; b.textContent=h; if(h===currentHall) b.classList.add('active');
-    if(counts[h]){ const c=document.createElement('span'); c.className='hall-count'; c.textContent=counts[h]; b.appendChild(c); }
-    b.onclick=()=>{ currentHall=h; renderHalls(); renderZones(); };
-    bar.appendChild(b);
-  });
-}
-
-/* ===== Официанты ===== */
-let selected=null;
-function waiterChip(name){
-  const notes=dayData().wNotes[name]||[]; const {bg,fg}=colorFor(name);
-  const chip=document.createElement('div'); chip.className='wchip'; if(selected&&selected.kind==='w'&&selected.name===name) chip.classList.add('active');
-  const main=document.createElement('div'); main.className='w-main';
-  const dot=document.createElement('div'); dot.className='w-dot'; dot.style.background=bg;
-  const nm=document.createElement('div'); nm.className='w-name'; nm.textContent=name; nm.style.color=fg;
-  const tools=document.createElement('div'); tools.className='w-tools';
-  const edit=document.createElement('button'); edit.className='iconbtn'; edit.title='Комментарий'; edit.textContent='✎';
-  const del=document.createElement('button'); del.className='iconbtn'; del.title='Удалить имя'; del.textContent='×';
-  tools.append(edit,del); main.append(dot,nm,tools);
-  const sub=document.createElement('div'); sub.className='w-note';
-  sub.textContent = notes.map(n=> (NOTE_EMOJI[n]?NOTE_EMOJI[n]+' ':'')+n).join('; ');
-  chip.append(main, sub);
-  chip.addEventListener('click',(e)=>{ if(e.target===edit||e.target===del) return; selected=(selected&&selected.kind==='w'&&selected.name===name)?null:{kind:'w',name}; highlightWaiters(); });
-  edit.addEventListener('click',(e)=>{ e.stopPropagation(); editNoteModal(name); });
-  del.addEventListener('click',(e)=>{
-    e.stopPropagation();
-    if(!confirm(`Удалить "${name}" и убрать из зон?`)) return;
-    db.waiters.shift1 = db.waiters.shift1.filter(n=>n!==name);
-    db.waiters.shift2 = db.waiters.shift2.filter(n=>n!==name);
-    const d=dayData();
-    Object.values(d.assign).forEach(zmap=>{ Object.keys(zmap).forEach(z=>{ zmap[z]=zmap[z].filter(e=>!(e.t==='w'&&e.name===name)); }); });
-    delete d.wNotes[name];
-    if(selected&&selected.kind==='w'&&selected.name===name) selected=null;
-    save(); renderWaiters(); renderZones(); updateShiftBadge(); renderHalls();
-  });
-  return chip;
-}
-function renderWaiters(){ const r1=$('#wRow1'), r2=$('#wRow2'); r1.innerHTML=''; r2.innerHTML=''; db.waiters.shift1.forEach(n=>r1.appendChild(waiterChip(n))); db.waiters.shift2.forEach(n=>r2.appendChild(waiterChip(n))); }
-function highlightWaiters(){ document.querySelectorAll('.wchip').forEach(el=>{ const n=el.querySelector('.w-name')?.textContent||''; if(selected && selected.kind==='w' && selected.name===n) el.classList.add('active'); else el.classList.remove('active'); }); }
-
-/* Комментарии к имени (множественные) */
-function editNoteModal(name){
-  const host=modal(); const d=dayData(); const cur=d.wNotes[name]||[];
-  host.body.innerHTML=`
-    <div class="muted mini" style="margin-bottom:6px">Комментарии для: <strong>${name}</strong></div>
-    <div class="row" style="gap:6px;flex-wrap:wrap;margin-bottom:6px">
-      ${NOTE_PRESETS.map(t=>`<label class="ctrl mini" style="display:inline-flex;gap:6px;align-items:center"><input type="checkbox" class="preset" value="${t.replace(/"/g,'&quot;')}" ${cur.includes(t)?'checked':''}/> ${t}</label>`).join('')}
-    </div>
-    <div class="row" style="gap:6px;align-items:flex-end">
-      <div style="flex:1"><div class="muted mini">Добавить свой (через ; можно несколько)</div><input id="own" class="ctrl" placeholder="например: Усиление; Выход к 18:00"/></div>
-      <button id="ok" class="ctrl primary">OK</button>
-      <button id="clr" class="ctrl">Очистить</button>
-    </div>`;
-  host.body.querySelector('#ok').onclick=()=>{ const sel=[...host.body.querySelectorAll('.preset:checked')].map(x=>x.value); const own=(host.body.querySelector('#own').value||'').split(';').map(s=>s.trim()).filter(Boolean); d.wNotes[name]=[...sel, ...own]; save(); renderWaiters(); renderZones(); host.close(); };
-  host.body.querySelector('#clr').onclick=()=>{ d.wNotes[name]=[]; save(); renderWaiters(); renderZones(); host.close(); };
-}
-
-/* ===== Зоны: список ===== */
+function dayData(){ const k=curDay(); db.data[k] ||= {assign:{},banquets:[],wNotes:{},extraText:''}; return db.data[k]; }
 function ensureHallZone(h,z){ const d=dayData(); d.assign[h] ||= {}; d.assign[h][z] ||= []; return d.assign[h][z]; }
-function banquetTitle(b){ const meta=BANQUET_META[b.type]||{ico:'🎈',cls:''}; const place = b.place ? (b.place.zone ? `${b.place.hall} — ${b.place.zone}` : b.place.hall) : '—'; return `${meta.ico} ${b.type} • ${b.people} чел • ${place}${b.note?` • ${b.note}`:''}`; }
-function renderBanquetChip(b, small=false, onDelete=null, onEdit=null){
-  const meta=BANQUET_META[b.type]||{ico:'🎈',cls:''};
-  const s=document.createElement('span'); s.className=`b-chip ${meta.cls}`;
-  s.innerHTML = `<span class="b-ico">${meta.ico}</span><span class="b-body"><span class="b-title">${small?`${b.type} • ${b.people} • ${b.place?.zone||b.place?.hall||'—'}`:banquetTitle(b)}</span>${(b.note?`<span class="b-note">${b.note}</span>`:'')}</span>`;
-  if(onEdit){ s.style.cursor='pointer'; s.onclick=onEdit; }
-  const x=document.createElement('button'); x.className='x'; x.title='Удалить'; x.textContent='×';
-  x.onclick=(ev)=>{ ev.stopPropagation(); onDelete && onDelete(); };
-  s.appendChild(x);
-  return s;
+
+/* ==== Верх и залы ==== */
+let currentHall='Основной зал';
+function renderTop(){ const iso=curDay(); $('#wday').textContent=fmtDate(iso); $('#zoneTitle').textContent=currentHall; }
+function renderHalls(){ const bar=$('#hallBar'); bar.innerHTML=''; Object.keys(db.halls).forEach(h=>{ const b=document.createElement('button'); b.className='hall-btn'; b.textContent=h; if(h===currentHall) b.classList.add('active'); b.onclick=()=>{ currentHall=h; renderTop(); renderZones(); }; bar.appendChild(b); }); }
+
+/* ==== Официанты ==== */
+let selected=null;
+function renderWaiters(){
+  const r1=$('#wRow1'), r2=$('#wRow2'); r1.innerHTML=''; r2.innerHTML='';
+  db.waiters.shift1.forEach(n=>r1.appendChild(chip(n)));
+  db.waiters.shift2.forEach(n=>r2.appendChild(chip(n)));
+  function chip(name){
+    const notes=dayData().wNotes[name]||[];
+    const {bg,fg}=colorFor(name);
+    const wrap=document.createElement('div'); wrap.className='wchip';
+    const top=document.createElement('div'); top.className='top';
+    const dot=document.createElement('div'); dot.className='w-dot'; dot.style.background=bg;
+    const nm=document.createElement('div'); nm.className='w-name'; nm.textContent=name; nm.style.color=fg;
+    const edit=document.createElement('button'); edit.className='iconbtn'; edit.textContent='✎';
+    const del=document.createElement('button'); del.className='iconbtn'; del.textContent='×';
+    top.append(dot,nm,edit,del);
+    const sub=document.createElement('div'); sub.className='w-note'; sub.textContent=notes.join('; ');
+    wrap.append(top,sub);
+    wrap.onclick=(e)=>{ if(e.target===edit||e.target===del) return; selected=(selected&&selected.kind==='w'&&selected.name===name)?null:{kind:'w',name}; };
+    edit.onclick=(e)=>{ e.stopPropagation(); editNote(name); };
+    del.onclick=(e)=>{ e.stopPropagation(); if(!confirm('Удалить имя?'))return; db.waiters.shift1=db.waiters.shift1.filter(x=>x!==name); db.waiters.shift2=db.waiters.shift2.filter(x=>x!==name); Object.values(dayData().assign).forEach(m=>Object.keys(m).forEach(z=>m[z]=m[z].filter(e=>!(e.t==='w'&&e.name===name)))); save(); renderWaiters(); renderZones(); updateShiftBadge(); };
+    return wrap;
+  }
 }
+function editNote(name){
+  const host=modal(); const d=dayData(); const cur=new Set(d.wNotes[name]||[]);
+  host.body.innerHTML=`<div style="font-size:12px" class="muted">Комментарии для <b>${name}</b></div><div id="list" style="margin:6px 0"></div><div class="row" style="justify-content:flex-end"><button class="ctrl mini" id="ok">OK</button><button class="ctrl mini" id="cl">Отмена</button></div>`;
+  const list=host.body.querySelector('#list');
+  NOTE_PRESETS.forEach(t=>{ const l=document.createElement('label'); l.style.marginRight='6px'; const cb=document.createElement('input'); cb.type='checkbox'; cb.checked=cur.has(t); cb.onchange=()=>cb.checked?cur.add(t):cur.delete(t); l.append(cb,document.createTextNode(' '+t)); list.appendChild(l); });
+  host.body.querySelector('#ok').onclick=()=>{ d.wNotes[name]=Array.from(cur); save(); renderWaiters(); renderZones(); host.close(); };
+  host.body.querySelector('#cl').onclick=host.close;
+}
+
+/* ==== Зоны: список (минимум) ==== */
 function renderZones(){
-  const d=dayData();
   $('#zoneTitle').textContent=currentHall;
   const box=$('#zonesBox'); box.innerHTML='';
   (db.halls[currentHall]||[]).forEach(z=>{
-    const wrap=document.createElement('div'); wrap.className='zone';
-    const head=document.createElement('div'); head.className='zhead';
-    head.innerHTML=`<strong>${(ZONE_ICONS[z]||'•')} ${z}</strong>`;
-    wrap.appendChild(head);
-    const slot=document.createElement('div'); slot.className='slot'; wrap.appendChild(slot);
-
-    const draw=()=>{
-      slot.innerHTML='';
-      const arr=ensureHallZone(currentHall,z);
-      arr.forEach((e,i)=>{
-        if(e.t==='w'){
-          const item=document.createElement('div'); item.className='assign';
-          const {bg,fg}=colorFor(e.name);
-          item.style.background=bg; item.style.color=fg;
-          const row=document.createElement('div'); row.className='row1';
-          row.innerHTML=`<span class="nm">${e.name}</span> <button class="x" title="Удалить">×</button>`;
-          const notes=(d.wNotes[e.name]||[]); const under=document.createElement('div'); under.className='small'; under.textContent=notes.join('; ');
-          item.appendChild(row); if(notes.length) item.appendChild(under);
-          row.querySelector('.x').onclick=()=>{ arr.splice(i,1); save(); draw(); updateShiftBadge(); renderHalls(); };
-          slot.appendChild(item);
-        }else{
-          const bb = d.banquets.find(x=>x.id===e.id); if(!bb) return;
-          const chip = renderBanquetChip(bb,true, ()=>{ arr.splice(i,1); save(); draw(); renderBanquets(); }, ()=> editBanquetModal(bb) );
-          slot.appendChild(chip);
-        }
-      });
-    };
-    draw();
-
-    wrap.addEventListener('click',()=>{
-      if(!selected) return;
-      const arr=ensureHallZone(currentHall,z);
-      if(selected.kind==='w'){
-        if(!arr.some(x=>x.t==='w'&&x.name===selected.name)){ arr.push({t:'w',name:selected.name}); }
-      }else if(selected.kind==='b'){
-        if(!arr.some(x=>x.t==='b'&&x.id===selected.id)){
-          arr.push({t:'b',id:selected.id});
-          const b=d.banquets.find(x=>x.id===selected.id); if(b){ b.place={hall:currentHall,zone:z}; }
-        }
+    const cont=document.createElement('div'); cont.className='zone';
+    cont.innerHTML=`<b>${z}</b>`;
+    const slot=document.createElement('div'); slot.className='slot'; cont.appendChild(slot);
+    const arr=ensureHallZone(currentHall,z);
+    const d=dayData();
+    arr.forEach((e,i)=>{
+      if(e.t==='w'){
+        const a=document.createElement('div'); a.className='assign';
+        const {bg,fg}=colorFor(e.name); a.style.background=bg; a.style.color=fg;
+        a.innerHTML=`<div class="row1"><span>${e.name}</span><button class="x">×</button></div><div class="small">${(d.wNotes[e.name]||[]).join('; ')}</div>`;
+        a.querySelector('.x').onclick=()=>{ arr.splice(i,1); save(); renderZones(); updateShiftBadge(); };
+        slot.appendChild(a);
+      }else{
+        const b=d.banquets.find(x=>x.id===e.id); if(!b) return;
+        const chip=document.createElement('div'); chip.className='assign'; chip.innerHTML=`<div class="row1"><span>🎉 ${b.type} • ${b.people}</span><button class="x">×</button></div><div class="small">${b.place?.hall||''} ${b.place?.zone||''} ${b.note||''}</div>`;
+        chip.querySelector('.x').onclick=()=>{ arr.splice(i,1); save(); renderZones(); };
+        slot.appendChild(chip);
       }
-      save(); draw(); updateShiftBadge(); renderHalls();
     });
-
-    box.appendChild(wrap);
+    cont.onclick=()=>{ if(!selected) return; if(selected.kind==='w'){ if(!arr.some(x=>x.t==='w'&&x.name===selected.name)) arr.push({t:'w',name:selected.name}); } save(); renderZones(); updateShiftBadge(); };
+    box.appendChild(cont);
   });
 }
 
-/* ===== Зоны: SVG-схема + рисование ===== */
-const svg = ()=>document.getElementById('planSVG');
+/* ==== СХЕМА: рисование произвольной зоны и назначение ==== */
 function drawSVGPolys(){
-  const layer=document.getElementById('polysLayer'); layer.innerHTML='';
+  const layer=$('#polysLayer'); layer.innerHTML='';
   (db.svg.polys||[]).forEach((p,idx)=>{
-    const poly = document.createElementNS('http://www.w3.org/2000/svg','polygon');
-    const pts = p.points.map(q=>`${q.x/100*1000},${q.y/100*700}`).join(' ');
-    poly.setAttribute('points', pts);
+    const poly=document.createElementNS('http://www.w3.org/2000/svg','polygon');
+    poly.setAttribute('points', p.points.map(q=>`${q.x/100*1113},${q.y/100*768}`).join(' '));
     poly.setAttribute('data-idx', idx);
     poly.setAttribute('data-label', p.label);
-    poly.setAttribute('fill', hex2rgba(p.color||'#ffd84d', 0.45));
-    poly.setAttribute('stroke', '#00000055');
-    poly.setAttribute('stroke-width','2');
-    poly.classList.add('zone-shape');
-    layer.appendChild(poly);
+    poly.setAttribute('fill', p.color ? toRGBA(p.color,.45) : 'rgba(255,216,77,.45)');
+    poly.setAttribute('stroke','#00000055'); poly.setAttribute('stroke-width','2'); poly.classList.add('zone-shape','soft');
+    $('#polysLayer').appendChild(poly);
   });
 }
-function attachSVGHandlers(){
-  const layer=document.getElementById('polysLayer');
-  layer.onclick=(e)=>{
-    const poly=e.target.closest('.zone-shape'); if(!poly) return;
-    const label=poly.getAttribute('data-label');
-    if(!selected) return;
-    const arr=ensureHallZone('Основной зал', label);
-    if(selected.kind==='w'){
-      if(!arr.some(x=>x.t==='w'&&x.name===selected.name)) arr.push({t:'w',name:selected.name});
-    }else if(selected.kind==='b'){
-      if(!arr.some(x=>x.t==='b'&&x.id===selected.id)){ arr.push({t:'b',id:selected.id}); const b=dayData().banquets.find(x=>x.id===selected.id); if(b){ b.place={hall:'Основной зал',zone:label}; } }
-    }
-    save(); renderZones(); updateShiftBadge(); renderHalls();
-  };
-  // долгое нажатие — редактировать/удалить
-  let hold=0;
-  layer.addEventListener('pointerdown',(e)=>{ const poly=e.target.closest('.zone-shape'); if(!poly) return; const idx=+poly.getAttribute('data-idx'); hold=setTimeout(()=>editPoly(idx),600); });
-  layer.addEventListener('pointerup',()=>clearTimeout(hold));
-  layer.addEventListener('pointerleave',()=>clearTimeout(hold));
-}
+function toRGBA(hex,a){const v=hex.replace('#','');const r=parseInt(v.slice(0,2),16),g=parseInt(v.slice(2,4),16),b=parseInt(v.slice(4,6),16);return `rgba(${r},${g},${b},${a})`;}
+
+/* клик по зоне = назначение */
+$('#polysLayer').addEventListener('click',(e)=>{
+  const poly=e.target.closest('.zone-shape'); if(!poly||!selected) return;
+  const label=poly.getAttribute('data-label'); const arr=ensureHallZone('Основной зал',label);
+  if(selected.kind==='w' && !arr.some(x=>x.t==='w'&&x.name===selected.name)){ arr.push({t:'w',name:selected.name}); }
+  if(selected.kind==='b'){ const d=dayData(); if(!arr.some(x=>x.t==='b'&&x.id===selected.id)){ arr.push({t:'b',id:selected.id}); const bb=d.banquets.find(x=>x.id===selected.id); if(bb) bb.place={hall:'Основной зал',zone:label}; }
+  }
+  save(); renderZones(); updateShiftBadge();
+});
+
+/* долгое нажатие по зоне — редакт/удаление */
+let hold=0;
+$('#polysLayer').addEventListener('pointerdown',(e)=>{ const poly=e.target.closest('.zone-shape'); if(!poly) return; const idx=+poly.getAttribute('data-idx'); hold=setTimeout(()=>editPoly(idx),600); });
+['pointerup','pointerleave'].forEach(ev=>$('#polysLayer').addEventListener(ev,()=>clearTimeout(hold)));
+
 function editPoly(idx){
-  const p=db.svg.polys[idx];
-  const h=modal();
-  h.body.innerHTML=`
-    <div class="muted mini" style="margin-bottom:6px">Зона по схеме</div>
-    <div class="row" style="gap:6px">
-      <div><div class="muted mini">Название</div><input id="zn" class="ctrl" value="${p.label.replace(/"/g,'&quot;')}"/></div>
-      <div><div class="muted mini">Цвет</div><input id="zc" type="color" class="ctrl" value="${p.color||'#ffd84d'}"/></div>
-    </div>
-    <div class="row" style="justify-content:flex-end;margin-top:8px;gap:6px">
-      <button class="ctrl primary mini" id="ok">Сохранить</button>
-      <button class="ctrl mini" id="del">Удалить</button>
-      <button class="ctrl mini" id="cl">Отмена</button>
-    </div>`;
-  h.body.querySelector('#ok').onclick=()=>{
-    const name=h.body.querySelector('#zn').value.trim(); const col=h.body.querySelector('#zc').value;
-    if(!name) return alert('Название обязательно');
-    if(name!==p.label){
-      const hall='Основной зал'; const d=dayData();
-      d.assign[hall] ||= {}; d.assign[hall][name] ||= [];
-      (d.assign[hall][p.label]||[]).forEach(x=> d.assign[hall][name].push(x));
-      delete d.assign[hall][p.label];
-      const list=db.halls[hall]; const i=list.indexOf(p.label); if(i>=0) list.splice(i,1,name);
-      p.label=name;
-    }
-    p.color=col; save(); drawSVGPolys(); renderZones(); h.close();
-  };
-  h.body.querySelector('#del').onclick=()=>{
-    if(!confirm('Удалить зону и её назначения?')) return;
-    const hall='Основной зал'; const d=dayData();
-    delete (d.assign[hall]||{})[p.label];
-    const list=db.halls[hall]; const i=list.indexOf(p.label); if(i>=0) list.splice(i,1);
-    db.svg.polys.splice(idx,1); save(); drawSVGPolys(); renderZones(); h.close();
-  };
-  h.body.querySelector('#cl').onclick=()=>h.close();
+  const p=db.svg.polys[idx]; const h=modal();
+  h.body.innerHTML=`<div class="row"><div><div class="muted" style="font-size:11px">Название</div><input id="zn" class="ctrl mini" value="${p.label.replace(/"/g,'&quot;')}"/></div><div><div class="muted" style="font-size:11px">Цвет</div><input id="zc" type="color" class="ctrl mini" value="${p.color||'#ffd84d'}"/></div><button id="ok" class="ctrl mini">Сохранить</button><button id="del" class="ctrl mini">Удалить</button></div>`;
+  h.body.querySelector('#ok').onclick=()=>{ const name=h.body.querySelector('#zn').value.trim(); const col=h.body.querySelector('#zc').value; if(!name) return; if(name!==p.label){ const d=dayData(); d.assign['Основной зал'] ||= {}; d.assign['Основной зал'][name]=d.assign['Основной зал'][p.label]||[]; delete d.assign['Основной зал'][p.label]; const list=db.halls['Основной зал']; const i=list.indexOf(p.label); if(i>=0) list.splice(i,1,name); p.label=name; } p.color=col; save(); drawSVGPolys(); renderZones(); h.close(); };
+  h.body.querySelector('#del').onclick=()=>{ if(!confirm('Удалить зону?'))return; delete (dayData().assign['Основной зал']||{})[p.label]; db.halls['Основной зал']=db.halls['Основной зал'].filter(x=>x!==p.label); db.svg.polys.splice(idx,1); save(); drawSVGPolys(); renderZones(); h.close(); };
 }
 
-/* Режим «Рисовать зону» (lasso) */
+/* Рисование зоны */
 let drawMode=false, curPts=[], curPath=null, rect=null;
-function enableDrawMode(on){
-  drawMode=on; document.getElementById('tabDraw').classList.toggle('active',on);
-  alert(on?'Рисование включено: веди пальцем контур будущей зоны.':'Рисование выключено.');
-}
-function bindDrawing(){
-  const wrap=document.getElementById('svgWrap');
-  wrap.addEventListener('pointerdown',(e)=>{
-    if(!drawMode) return;
-    e.preventDefault();
-    rect=wrap.getBoundingClientRect(); curPts=[]; const {x,y}=rel(e);
-    curPts.push(x,y);
-    if(curPath){ curPath.remove(); curPath=null; }
-    const dl=document.createElementNS('http://www.w3.org/2000/svg','polyline');
-    dl.setAttribute('points',''); dl.setAttribute('stroke','#333'); dl.setAttribute('stroke-width','2'); dl.setAttribute('fill','none'); dl.style.pointerEvents='none';
-    document.getElementById('planSVG').appendChild(dl);
-    curPath=dl; wrap.setPointerCapture(e.pointerId);
-  });
-  wrap.addEventListener('pointermove',(e)=>{
-    if(!drawMode || !curPath) return;
-    const {x,y}=rel(e); curPts.push(x,y);
-    curPath.setAttribute('points', toSvgPoints(curPts));
-  });
-  wrap.addEventListener('pointerup', ()=>{
-    if(!drawMode || !curPath) return;
-    const pts = toPairs(curPts).map(([px,py])=>({ x:px*100, y:py*100 }));
-    curPath.remove(); curPath=null;
-    if(pts.length<3){ enableDrawMode(false); return; }
-    askZoneMeta(pts);
-  });
-  function rel(e){ const cx=e.clientX, cy=e.clientY; return { x:(cx-rect.left)/rect.width, y:(cy-rect.top)/rect.height }; }
-  function toSvgPoints(arr){ const out=[]; for(let i=0;i<arr.length;i+=2) out.push((arr[i]*1000)+','+(arr[i+1]*700)); return out.join(' '); }
-  function toPairs(arr){ const r=[]; for(let i=0;i<arr.length;i+=2) r.push([arr[i],arr[i+1]]); return r; }
-}
+function enableDraw(on){ drawMode=on; alert(on?'Рисование включено: обведите пальцем зону.':'Рисование выключено.'); }
+$('#tabDraw').onclick=()=>{ enableDraw(true); };
+$('#tabList').onclick=()=>{ $('#zonesBox').style.display=$('#zonesBox').style.display==='none'?'block':'none'; };
+$('#tabMap').onclick=()=>{ /* просто для вида */ };
+
+const wrap=$('#svgWrap');
+wrap.addEventListener('pointerdown',(e)=>{
+  if(!drawMode) return;
+  e.preventDefault(); rect=wrap.getBoundingClientRect(); curPts=[];
+  const {x,y}=rel(e); curPts.push(x,y);
+  if(curPath){ curPath.remove(); curPath=null; }
+  curPath=document.createElementNS('http://www.w3.org/2000/svg','polyline');
+  curPath.setAttribute('points',''); curPath.setAttribute('stroke','#333'); curPath.setAttribute('stroke-width','2'); curPath.setAttribute('fill','none'); curPath.style.pointerEvents='none';
+  $('#planSVG').appendChild(curPath); wrap.setPointerCapture(e.pointerId);
+});
+wrap.addEventListener('pointermove',(e)=>{
+  if(!drawMode||!curPath) return; const {x,y}=rel(e); curPts.push(x,y); curPath.setAttribute('points', curPtsToStr(curPts));
+});
+wrap.addEventListener('pointerup', ()=>{
+  if(!drawMode||!curPath) return;
+  const pts = toPairs(curPts).map(([px,py])=>({x:px*100,y:py*100}));
+  curPath.remove(); curPath=null;
+  if(pts.length<3){ enableDraw(false); return; }
+  askZoneMeta(pts);
+});
+function rel(e){ const cx=e.clientX, cy=e.clientY; return {x:(cx-rect.left)/rect.width, y:(cy-rect.top)/rect.height}; }
+function curPtsToStr(arr){ const out=[]; for(let i=0;i<arr.length;i+=2) out.push((arr[i]*1113)+','+(arr[i+1]*768)); return out.join(' '); }
+function toPairs(arr){ const r=[]; for(let i=0;i<arr.length;i+=2) r.push([arr[i],arr[i+1]]); return r; }
+
 function askZoneMeta(points){
   const h=modal();
-  h.body.innerHTML=`
-    <div class="muted mini" style="margin-bottom:6px">Новая зона по схеме</div>
-    <div class="row" style="gap:6px">
-      <div><div class="muted mini">Название</div><input id="zn" class="ctrl" placeholder="Например: Столы 1–3"/></div>
-      <div><div class="muted mini">Цвет</div><input id="zc" type="color" class="ctrl" value="#ffd84d"/></div>
-    </div>
-    <div class="row" style="justify-content:flex-end;margin-top:8px;gap:6px">
-      <button class="ctrl primary mini" id="ok">Создать</button>
-      <button class="ctrl mini" id="cl">Отмена</button>
-    </div>`;
-  h.body.querySelector('#ok').onclick=()=>{
-    const name=h.body.querySelector('#zn').value.trim(); const col=h.body.querySelector('#zc').value;
-    if(!name) return alert('Название обязательно');
-    db.svg.polys.push({ label:name, color:col, points });
-    if(!db.halls['Основной зал'].includes(name)) db.halls['Основной зал'].push(name);
-    save(); drawSVGPolys(); renderZones(); h.close(); enableDrawMode(false);
-  };
-  h.body.querySelector('#cl').onclick=()=>{ h.close(); enableDrawMode(false); };
+  h.body.innerHTML=`<div class="row"><div><div class="muted" style="font-size:11px">Название</div><input id="zn" class="ctrl mini" placeholder="Например: Столы 1–3"/></div><div><div class="muted" style="font-size:11px">Цвет</div><input id="zc" type="color" class="ctrl mini" value="#ffd84d"/></div><button id="ok" class="ctrl mini">Создать</button><button id="cl" class="ctrl mini">Отмена</button></div>`;
+  h.body.querySelector('#ok').onclick=()=>{ const name=h.body.querySelector('#zn').value.trim(); const col=h.body.querySelector('#zc').value; if(!name) return; db.svg.polys.push({label:name,color:col,points}); if(!db.halls['Основной зал'].includes(name)) db.halls['Основной зал'].push(name); save(); drawSVGPolys(); renderZones(); h.close(); enableDraw(false); };
+  h.body.querySelector('#cl').onclick=()=>{ h.close(); enableDraw(false); };
 }
 
-/* ===== Банкет ===== */
-function renderBanquets(){
-  const p=$('#banquetPanel'); p.innerHTML='';
-  dayData().banquets.forEach(b=>{
-    const chip=renderBanquetChip(b,false, ()=>{ const d=dayData(); Object.values(d.assign).forEach(zmap=>{ Object.keys(zmap).forEach(z=>{ zmap[z]=(zmap[z]||[]).filter(e=>!(e.t==='b'&&e.id===b.id)); }); }); d.banquets=d.banquets.filter(x=>x.id!==b.id); save(); renderBanquets(); renderZones(); }, ()=> editBanquetModal(b) );
-    p.appendChild(chip);
-  });
-}
-function addBanquetModal(){ openBanquetModal(); }
-function editBanquetModal(b){ openBanquetModal(b); }
-function openBanquetModal(existing=null){
-  const host=modal(); const halls=Object.keys(db.halls); const hallOpts=halls.map(h=>`<option>${h}</option>`).join('');
-  const b = existing || {type:'ДР', people:10, note:'', place:{hall:halls[0], zone:(db.halls[halls[0]]||[])[0]}};
-  host.body.innerHTML=`
-    <div class="row" style="flex-wrap:wrap;gap:8px">
-      <div><div class="muted mini">Мероприятие</div><select id="bType" class="ctrl">${BANQUET_TYPES.map(t=>`<option ${t===b.type?'selected':''}>${t}</option>`).join('')}</select></div>
-      <div><div class="muted mini">Кол-во</div><input id="bPeople" class="ctrl" type="number" min="1" inputmode="numeric" value="${b.people||''}" placeholder="25"/></div>
-      <div><div class="muted mini">Зал</div><select id="bHall" class="ctrl">${hallOpts}</select></div>
-      <div><div class="muted mini">Зона</div><select id="bZone" class="ctrl"></select></div>
-      <div style="flex:1 1 100%"><div class="muted mini">Комментарий</div><input id="bNote" class="ctrl" placeholder="Пожелания, тайминг..." value="${(b.note||'').replace(/"/g,'&quot;')}"/></div>
-      <div class="row" style="gap:8px;margin-top:4px"><button id="bOk" class="ctrl primary">${existing?'Сохранить':'Добавить'}</button><button id="bCancel" class="ctrl">Отмена</button></div>
-    </div>`;
-  const hallSel=host.body.querySelector('#bHall'), zoneSel=host.body.querySelector('#bZone');
-  hallSel.value=b.place?.hall||halls[0];
-  function fill(){ zoneSel.innerHTML=''; (db.halls[hallSel.value]||[]).forEach(z=>{ const o=document.createElement('option'); o.textContent=z; zoneSel.appendChild(o); }); zoneSel.value = (b.place?.zone && db.halls[hallSel.value]?.includes(b.place.zone)) ? b.place.zone : (db.halls[hallSel.value]||[])[0]; }
-  hallSel.onchange=fill; fill();
-  host.body.querySelector('#bOk').onclick=()=>{
-    const t=host.body.querySelector('#bType').value;
-    const p=parseInt(host.body.querySelector('#bPeople').value||'0',10);
-    const note=host.body.querySelector('#bNote').value.trim();
-    const hall=hallSel.value, zone=zoneSel.value;
-    if(!(p>0)) return alert('Укажите количество человек');
-    const d=dayData();
-    if(existing){
-      existing.type=t; existing.people=p; existing.note=note; existing.place={hall,zone};
-      Object.values(d.assign).forEach(zmap=>{ Object.keys(zmap).forEach(z=>{ zmap[z]=(zmap[z]||[]).filter(e=>!(e.t==='b'&&e.id===existing.id)); }); });
-      d.assign[hall] ||= {}; d.assign[hall][zone] ||= []; d.assign[hall][zone].push({t:'b', id:existing.id});
-    }else{
-      const id='b'+Math.random().toString(36).slice(2);
-      const rec={id,type:t,people:p,note,place:{hall,zone}};
-      d.banquets.push(rec); d.assign[hall] ||= {}; d.assign[hall][zone] ||= []; d.assign[hall][zone].push({t:'b',id});
-    }
-    save(); renderBanquets(); renderZones(); host.close();
-  };
-  host.body.querySelector('#bCancel').onclick=host.close;
+/* Банкет */
+function renderBanquets(){ const p=$('#banquetPanel'); p.innerHTML=''; dayData().banquets.forEach(b=>{ const chip=document.createElement('span'); chip.className='b-chip'; chip.innerHTML=`<span class="b-ico">🎉</span><span class="b-body"><span class="b-title">${b.type} • ${b.people} • ${(b.place?.zone||b.place?.hall||'—')}</span>${b.note?`<span class="b-note">${b.note}</span>`:''}</span>`; const x=document.createElement('button'); x.className='iconbtn'; x.textContent='×'; x.onclick=()=>{ const d=dayData(); Object.values(d.assign).forEach(zm=>Object.keys(zm).forEach(z=>zm[z]=zm[z].filter(e=>!(e.t==='b'&&e.id===b.id)))); d.banquets=d.banquets.filter(x=>x.id!==b.id); save(); renderBanquets(); renderZones(); }; chip.appendChild(x); p.appendChild(chip); }); }
+$('#addBanquetBtn').onclick=()=>openBanquet();
+
+function openBanquet(){
+  const host=modal(); const halls=Object.keys(db.halls);
+  host.body.innerHTML=`<div class="row"><div><div class="muted" style="font-size:11px">Тип</div><select id="t" class="ctrl mini">${BANQUET_TYPES.map(t=>`<option>${t}</option>`).join('')}</select></div><div><div class="muted" style="font-size:11px">Кол-во</div><input id="p" class="ctrl mini" type="number" min="1" inputmode="numeric"/></div><div><div class="muted" style="font-size:11px">Зал</div><select id="h" class="ctrl mini">${halls.map(h=>`<option>${h}</option>`)}</select></div><div><div class="muted" style="font-size:11px">Зона</div><select id="z" class="ctrl mini"></select></div><div style="flex:1"><div class="muted" style="font-size:11px">Комментарий</div><input id="n" class="ctrl mini"/></div><button id="ok" class="ctrl mini">Добавить</button><button id="cl" class="ctrl mini">Отмена</button></div>`;
+  const h=host.body.querySelector('#h'), z=host.body.querySelector('#z'); const fill=()=>{ z.innerHTML=''; (db.halls[h.value]||[]).forEach(x=>{ const o=document.createElement('option'); o.textContent=x; z.appendChild(o); }); }; h.onchange=fill; fill();
+  host.body.querySelector('#ok').onclick=()=>{ const type=host.body.querySelector('#t').value; const people=parseInt(host.body.querySelector('#p').value||'0',10); const note=host.body.querySelector('#n').value.trim(); if(!(people>0)) return; const id='b'+Math.random().toString(36).slice(2); const hall=h.value, zone=z.value; const d=dayData(); d.banquets.push({id,type,people,note,place:{hall,zone}}); d.assign[hall] ||= {}; d.assign[hall][zone] ||= []; d.assign[hall][zone].push({t:'b',id}); save(); renderBanquets(); renderZones(); host.close(); };
+  host.body.querySelector('#cl').onclick=host.close;
 }
 
-/* ===== Завтраки: МЕСЯЧНЫЙ ГРАФИК ===== */
-function openBreakfasts(){
+/* Завтраки — КОМПАКТ (без дня недели), месяц в 2 колонки */
+$('#breakfastBtn').onclick=()=>{
   const host=modal();
-  const now = new Date(curDay()+'T00:00');
-  let y = now.getFullYear(), m = now.getMonth(); // текущий месяц
-  host.body.innerHTML=`
-    <div class="row" style="justify-content:space-between;align-items:center;margin-bottom:6px">
-      <div class="muted mini">График на завтраки (за месяц)</div>
-      <div class="row">
-        <button class="ctrl mini" id="prevM">←</button>
-        <div class="pill" id="monLbl"></div>
-        <button class="ctrl mini" id="nextM">→</button>
-      </div>
-    </div>
-    <div id="brList"></div>
-    <div class="row" style="justify-content:flex-end;margin-top:8px;gap:6px">
-      <button class="ctrl mini" id="sendMonth">Отправить месяц</button>
-      <button class="ctrl mini" id="close">Закрыть</button>
-    </div>`;
+  const now=new Date(curDay()+'T00:00'); let y=now.getFullYear(), m=now.getMonth();
+  host.body.innerHTML=`<div class="row" style="justify-content:space-between"><div class="ctrl mini" id="prev">←</div><div class="ctrl mini" id="lbl"></div><div class="ctrl mini" id="next">→</div></div><div id="grid" style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:6px"></div><div class="row" style="justify-content:flex-end;margin-top:6px"><button class="ctrl mini" id="send">Отправить месяц</button><button class="ctrl mini" id="close">Закрыть</button></div>`;
+  const lbl=host.body.querySelector('#lbl'), grid=host.body.querySelector('#grid');
+  const render=()=>{ lbl.textContent=new Date(y,m,1).toLocaleDateString('ru-RU',{month:'long',year:'numeric'}); grid.innerHTML=''; const last=new Date(y,m+1,0).getDate(); for(let d=1; d<=last; d++){ const iso=`${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`; const names=db.breakfasts[iso]||[]; const cell=document.createElement('div'); cell.className='box pad'; cell.style.fontSize='12px'; cell.innerHTML=`<div style="display:flex;justify-content:space-between"><b>${String(d).padStart(2,'0')}.${String(m+1).padStart(2,'0')}.${y}</b><span class="muted" style="font-size:11px">${names.join(', ')||'—'}</span></div><div class="row" style="justify-content:flex-end"><button class="ctrl mini">Изм.</button></div>`; cell.querySelector('button').onclick=()=>editDay(iso,names); grid.appendChild(cell);} };
+  function editDay(iso,current){ const h=modal(); const all=[...db.waiters.shift1,...db.waiters.shift2]; const set=new Set(current||[]); h.body.innerHTML=`<div style="font-size:12px" class="muted">${fmtDate(iso)}</div><div id="n"></div><div class="row" style="justify-content:flex-end;margin-top:6px"><button class="ctrl mini" id="ok">OK</button><button class="ctrl mini" id="cl">Отмена</button></div>`; const n=h.body.querySelector('#n'); all.forEach(w=>{ const L=document.createElement('label'); L.style.marginRight='6px'; const cb=document.createElement('input'); cb.type='checkbox'; cb.checked=set.has(w); cb.onchange=()=>cb.checked?set.add(w):set.delete(w); L.append(cb,document.createTextNode(' '+w)); n.appendChild(L); }); h.body.querySelector('#ok').onclick=()=>{ db.breakfasts[iso]=Array.from(set); save(); render(); h.close(); }; h.body.querySelector('#cl').onclick=()=>h.close(); }
+  host.body.querySelector('#prev').onclick=()=>{ m--; if(m<0){m=11;y--;} render(); };
+  host.body.querySelector('#next').onclick=()=>{ m++; if(m>11){m=0;y++;} render(); };
+  host.body.querySelector('#send').onclick=()=>{ const last=new Date(y,m+1,0).getDate(); const lines=[`☕ График завтраков за ${new Date(y,m,1).toLocaleDateString('ru-RU',{month:'long',year:'numeric'})}:`]; for(let d=1; d<=last; d++){ const iso=`${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`; const arr=db.breakfasts[iso]||[]; if(!arr.length) continue; lines.push(`${fmtDate(iso)}: ${arr.join(', ')}`); } const url='https://wa.me/?text='+encodeURIComponent(lines.join('\n')); window.open(url,'_blank'); };
   host.body.querySelector('#close').onclick=host.close;
-  host.body.querySelector('#prevM').onclick=()=>{ m--; if(m<0){m=11;y--;} renderMonth(); };
-  host.body.querySelector('#nextM').onclick=()=>{ m++; if(m>11){m=0;y++;} renderMonth(); };
-  host.body.querySelector('#sendMonth').onclick=()=>{ const msg=buildBreakfastMonth(y,m); const url='https://wa.me/?text='+encodeURIComponent(msg); window.open(url,'_blank'); };
+  render();
+};
 
-  function renderMonth(){
-    host.body.querySelector('#monLbl').textContent = new Date(y,m,1).toLocaleDateString('ru-RU',{year:'numeric',month:'long'});
-    const list=host.body.querySelector('#brList'); list.innerHTML='';
-    const last = new Date(y,m+1,0).getDate();
-    for(let d=1; d<=last; d++){
-      const iso = `${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
-      const names = db.breakfasts[iso]||[];
-      const row=document.createElement('div'); row.className='box pad'; row.style.marginBottom='6px';
-      row.innerHTML=`
-        <div class="row" style="justify-content:space-between">
-          <div><strong>${String(d).padStart(2,'0')}.${String(m+1).padStart(2,'0')}.${y}</strong> <span class="muted">(${weekday(iso)})</span></div>
-          <div class="muted mini">${names.length? 'Выбраны: '+names.join(', ') : '—'}</div>
-        </div>
-        <div class="row" style="justify-content:flex-end;margin-top:6px">
-          <button class="ctrl mini">Изменить</button>
-        </div>`;
-      const btn=row.querySelector('button'); btn.onclick=()=>editDay(iso, names);
-      list.appendChild(row);
-    }
-  }
-  function editDay(iso, current){
-    const h=modal(); const all=[...db.waiters.shift1,...db.waiters.shift2]; const set=new Set(current||[]);
-    h.body.innerHTML=`
-      <div class="muted mini" style="margin-bottom:6px">Выбор на ${fmtDate(iso)} (${weekday(iso)})</div>
-      <div id="names"></div>
-      <div class="row" style="justify-content:flex-end;margin-top:8px;gap:6px">
-        <button class="ctrl primary mini" id="ok">Сохранить</button>
-        <button class="ctrl mini" id="cl">Отмена</button>
-      </div>`;
-    const cont=h.body.querySelector('#names');
-    all.forEach(n=>{
-      const label=document.createElement('label'); label.style.display='inline-flex'; label.style.alignItems='center'; label.style.gap='6px'; label.style.margin='4px 8px 0 0';
-      const box=document.createElement('input'); box.type='checkbox'; box.checked=set.has(n);
-      box.onchange=()=>{ box.checked?set.add(n):set.delete(n); };
-      label.appendChild(box); label.appendChild(document.createTextNode(n)); cont.appendChild(label);
-    });
-    h.body.querySelector('#ok').onclick=()=>{ db.breakfasts[iso]=Array.from(set); save(); renderMonth(); h.close(); };
-    h.body.querySelector('#cl').onclick=()=>h.close();
-  }
-  function buildBreakfastMonth(Y,M){
-    const last = new Date(Y,M+1,0).getDate();
-    const lines=[`☕ График завтраков за ${new Date(Y,M,1).toLocaleDateString('ru-RU',{month:'long',year:'numeric'})}:`];
-    for(let d=1; d<=last; d++){
-      const iso = `${Y}-${String(M+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
-      const arr=db.breakfasts[iso]||[];
-      if(!arr.length) continue;
-      lines.push(`${fmtDate(iso)} (${weekday(iso)}): ${arr.join(', ')}`);
-    }
-    return lines.join('\n');
-  }
-  renderMonth();
-}
+/* Счётчик людей */
+function countUnique(){ const used=new Set(); const d=dayData(); Object.values(d.assign).forEach(zm=>Object.values(zm).forEach(arr=>arr.filter(x=>x.t==='w').forEach(x=>used.add(x.name)))); return used.size; }
+function updateShiftBadge(){ $('#shiftBadge').textContent=`В смена ${countUnique()} человек`; }
 
-/* ===== Экспорт / WhatsApp ===== */
-function countUniqueAssigned(){ const d=dayData(); const used=new Set(); Object.values(d.assign).forEach(zmap=>{ Object.values(zmap).forEach(arr=>{ arr.filter(x=>x.t==='w').forEach(x=>used.add(x.name)); }); }); return used.size; }
-function updateShiftBadge(){ $('#shiftBadge').textContent=`В смена ${countUniqueAssigned()} человек`; }
-
+/* WhatsApp текст */
 function buildMessage(){
-  const iso=curDay(), d=dayData(), lines=[];
+  const d=dayData(), iso=curDay(), lines=[];
   lines.push('Добрый день, друзья!');
   lines.push(`${fmtDate(iso)} (${weekday(iso)})`);
-  lines.push(`В смена ${countUniqueAssigned()} человек. 🕺`);
-  if(d.banquets.length===0) lines.push('Банкеты: 0');
-  else{ lines.push('Банкеты:'); d.banquets.forEach(b=>lines.push('• '+banquetTitle(b))); }
-  const br = db.breakfasts[iso]||[]; if(br.length){ lines.push(`☕ Официант на завтраках — ${br.join(', ')}.`); }
+  lines.push(`В смена ${countUnique()} человек. 🕺`);
+  lines.push('Банкеты:'+(d.banquets.length? '' : ' 0'));
+  d.banquets.forEach(b=>lines.push(`• ${b.type} • ${b.people} • ${(b.place?.zone||b.place?.hall||'—')}${b.note?` • ${b.note}`:''}`));
   Object.keys(d.assign).forEach(h=>{
-    const zones=d.assign[h]; const non=Object.keys(zones).filter(z=>(zones[z]||[]).length>0);
-    if(!non.length) return; lines.push(''); lines.push(`${(HALL_ICONS[h]||'🏠')} *${h}*`);
-    non.forEach(z=>{
-      const arr=zones[z];
-      const text=arr.map(e=>{
-        if(e.t==='w'){ const notes=(d.wNotes[e.name]||[]); return notes.length?`${e.name} (${notes.join('; ')})`:e.name; }
-        const bb=d.banquets.find(x=>x.id===e.id); return bb?`${BANQUET_META[bb.type]?.ico||'🎈'} ${bb.type} ${bb.people}чел`:'Банкет';
-      }).join(', ');
-      const zico = ZONE_ICONS[z]||'•';
-      lines.push(`${zico} ${z}: ${text}`);
-    });
+    const zm=d.assign[h]; const non=Object.keys(zm).filter(z=>zm[z]?.length); if(!non.length) return;
+    lines.push(''); lines.push(h);
+    non.forEach(z=>{ const txt=zm[z].map(e=> e.t==='w'?e.name:`🎉 ${d.banquets.find(x=>x.id===e.id)?.type||'Банкет'}`).join(', '); lines.push(`${z}: ${txt}`); });
   });
-  if(d.extraText){ lines.push(''); lines.push(d.extraText); }
   lines.push(''); lines.push('Всем хорошей смены и больших чаевых! 💵');
   return lines.join('\n');
 }
 function sendWhatsApp(){ const txt=buildMessage(); const app='whatsapp://send?text='+encodeURIComponent(txt); const web='https://wa.me/?text='+encodeURIComponent(txt); const a=document.createElement('a'); a.href=app; document.body.appendChild(a); a.click(); setTimeout(()=>{ window.open(web,'_blank'); a.remove(); },300); }
+$('#sendBtn').onclick=sendWhatsApp;
 
-/* Схема → PNG → системный Share (WhatsApp) */
+/* Схема → PNG → системный шаринг (WhatsApp) */
 async function sendPlanAsImage(){
   try{
-    const svgEl = document.getElementById('planSVG');
-    if(!svgEl){ alert('Открой вкладку «Схема».'); return; }
-    const s = new XMLSerializer().serializeToString(svgEl);
-    const blobSvg = new Blob([s], {type:'image/svg+xml'});
-    const url = URL.createObjectURL(blobSvg);
-    const img = new Image();
-    await new Promise(res=>{ img.onload=res; img.src=url; });
-    const W = svgEl.viewBox.baseVal.width || 1000, H = svgEl.viewBox.baseVal.height||700;
-    const canvas = document.createElement('canvas'); canvas.width=W; canvas.height=H;
-    const ctx = canvas.getContext('2d');
-    ctx.fillStyle='#ffffff'; ctx.fillRect(0,0,W,H);
-    ctx.drawImage(img,0,0,W,H);
-    URL.revokeObjectURL(url);
-    const pngBlob = await new Promise(r=>canvas.toBlob(r,'image/png',0.92));
-    const file = new File([pngBlob], `schema-${fmtDate(curDay())}.png`, {type:'image/png'});
-    if(navigator.canShare && navigator.canShare({files:[file]})){ await navigator.share({ files:[file], text:`Схема ${fmtDate(curDay())}` }); }
-    else{ const u=URL.createObjectURL(pngBlob); window.open(u,'_blank'); setTimeout(()=>URL.revokeObjectURL(u),20000); }
-  }catch(e){ alert('Не удалось сформировать изображение схемы: '+e.message); }
+    const svgEl = document.getElementById('planSVG'); const s = new XMLSerializer().serializeToString(svgEl);
+    const blobSvg = new Blob([s], {type:'image/svg+xml'}); const url = URL.createObjectURL(blobSvg);
+    const img = new Image(); await new Promise(res=>{ img.onload=res; img.src=url; });
+    const W=1113,H=768; const canvas=document.createElement('canvas'); canvas.width=W; canvas.height=H;
+    const ctx=canvas.getContext('2d'); ctx.fillStyle='#fff'; ctx.fillRect(0,0,W,H); ctx.drawImage(img,0,0,W,H); URL.revokeObjectURL(url);
+    const pngBlob = await new Promise(r=>canvas.toBlob(r,'image/png',0.92)); const file = new File([pngBlob], `schema-${fmtDate(curDay())}.png`, {type:'image/png'});
+    if(navigator.canShare && navigator.canShare({files:[file]})) await navigator.share({files:[file],text:`Схема ${fmtDate(curDay())}`}); else { const u=URL.createObjectURL(pngBlob); window.open(u,'_blank'); setTimeout(()=>URL.revokeObjectURL(u),20000); }
+  }catch(e){ alert('Не удалось сформировать изображение: '+e.message); }
 }
+$('#sendPlanBtn').onclick=sendPlanAsImage; $('#sendPngBtn').onclick=sendPlanAsImage;
 
-/* Сохранение/импорт JSON */
+/* Сохранить / Импорт */
 function saveToFile(){ const blob=new Blob([JSON.stringify(db,null,2)],{type:'application/json'}); const url=URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download=`rota-${curDay()}.json`; document.body.appendChild(a); a.click(); setTimeout(()=>{ URL.revokeObjectURL(url); a.remove(); },0); }
-function importFromFile(file){ const r=new FileReader(); r.onload=()=>{ try{
-  const obj=JSON.parse(r.result);
-  if(obj&&obj.waiters&&obj.halls&&obj.data){ db=obj; purgeOld(); save(); renderAll(); alert('Импортирован полный бэкап.'); return; }
-  if(obj&&(obj.assign||obj.banquets||obj.extraText!==undefined||obj.wNotes)){ const k=curDay(); db.data[k]={assign:obj.assign||{},banquets:obj.banquets||[],extraText:obj.extraText||'',wNotes:obj.wNotes||{},ozCustom:null}; purgeOld(); save(); renderAll(); alert('Импортированы данные текущего дня.'); return; }
-  alert('Неизвестный формат JSON.');
-}catch(e){ alert('Ошибка импорта: '+e.message); } }; r.readAsText(file); }
+$('#saveBtn').onclick=saveToFile;
+$('#importBtn').onclick=()=>$('#importFile').click();
+$('#importFile').onchange=(e)=>{ const f=e.target.files?.[0]; if(!f) return; const r=new FileReader(); r.onload=()=>{ try{ const obj=JSON.parse(r.result); if(obj.waiters&&obj.halls&&obj.data){ db=obj; save(); renderAll(); alert('Импортирован полный бэкап.'); }else{ alert('Неверный формат.'); } }catch(err){ alert('Ошибка импорта: '+err.message); } }; r.readAsText(f); e.target.value=''; };
 
-/* ===== Рендер всего ===== */
-function renderBanquetsAndWaiters(){ renderBanquets(); renderWaiters(); }
-function renderAll(){ renderTop(); renderHalls(); renderZones(); renderBanquetsAndWaiters(); updateShiftBadge(); drawSVGPolys(); attachSVGHandlers(); }
-
-/* ===== Старт ===== */
+/* Инициализация */
 document.addEventListener('DOMContentLoaded', ()=>{
-  const dEl=$('#date'); dEl.value=dEl.value||todayISO(); dEl.onchange=()=>{ renderAll(); save(); };
+  $('#date').value=$('#date').value||todayISO();
+  $('#date').onchange=()=>{ renderAll(); save(); };
+  $('#toggleShift2').onclick=()=>{ const w=$('#wRow2Wrap'); w.style.display = w.style.display==='none' ? 'block' : 'none'; };
   renderAll();
-
-  $('#toggleShift2').onclick=()=>{ const w=$('#wRow2Wrap'); w.style.display=(w.style.display==='none')?'block':'none'; };
-  $('#addWaiterBtn').onclick=()=>{
-    const host=modal();
-    host.body.innerHTML=`<div class="row" style="gap:6px;align-items:flex-end"><div style="flex:1"><div class="muted mini">Имя</div><input id="nm" class="ctrl" placeholder="Например: Павел"/></div><div><div class="muted mini">Смена</div><select id="sh" class="ctrl"><option value="1">1-я</option><option value="2">2-я</option></select></div><button id="go" class="ctrl primary">Добавить</button><button id="cl" class="ctrl">Отмена</button></div>`;
-    host.body.querySelector('#go').onclick=()=>{ const nm=(host.body.querySelector('#nm').value||'').trim(); const sh=host.body.querySelector('#sh').value; if(!nm) return alert('Введите имя'); if(db.waiters.shift1.includes(nm)||db.waiters.shift2.includes(nm)) return alert('Такое имя уже есть'); if(sh==='1') db.waiters.shift1.push(nm); else db.waiters.shift2.push(nm); save(); renderWaiters(); host.close(); };
-    host.body.querySelector('#cl').onclick=host.close;
-  };
-
-  $('#addBanquetBtn').onclick=addBanquetModal;
-  $('#sendBtn').onclick=sendWhatsApp;
-  $('#sendPlanBtn').onclick=()=>{ // переключимся на вкладку «Схема» и отправим файл
-    document.getElementById('tabMap').click();
-    setTimeout(sendPlanAsImage,150);
-  };
-  $('#breakfastBtn').onclick=openBreakfasts;
-  $('#saveBtn').onclick=saveToFile;
-  $('#importBtn').onclick=()=>document.getElementById('importFile').click();
-  document.getElementById('importFile').onchange=(e)=>{ const f=e.target.files?.[0]; if(f) importFromFile(f); e.target.value=''; };
-
-  // Табы «Список/Схема/Рисовать»
-  $('#tabList').onclick=()=>{ $('#tabList').classList.add('active'); $('#tabMap').classList.remove('active'); $('#tabDraw').classList.remove('active'); $('#zonesBox').style.display='block'; $('#mapBox').style.display='none'; enableDrawMode(false); };
-  $('#tabMap').onclick=()=>{ $('#tabMap').classList.add('active'); $('#tabList').classList.remove('active'); $('#tabDraw').classList.remove('active'); $('#zonesBox').style.display='none'; $('#mapBox').style.display='block'; enableDrawMode(false); };
-  $('#tabDraw').onclick=()=>{ $('#tabMap').classList.add('active'); $('#tabList').classList.remove('active'); $('#mapBox').style.display='block'; $('#zonesBox').style.display='none'; enableDrawMode(true); };
-
-  // Привязка рисования
-  bindDrawing();
-
-  // SW
   if('serviceWorker' in navigator){ navigator.serviceWorker.register('sw.js').catch(()=>{}); }
 });
+function renderAll(){ renderTop(); renderHalls(); renderWaiters(); renderZones(); drawSVGPolys(); updateShiftBadge(); }
 })();
 </script>
 </body>
